@@ -1,3 +1,3 @@
 export const environment = {
-  apiBaseUrl: 'http://localhost:8080'
+  apiBaseUrl: 'https://catalog-api-80xe.onrender.com/catalog/api',
 };

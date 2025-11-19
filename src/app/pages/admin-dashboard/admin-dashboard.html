@@ -1,0 +1,81 @@
+<div class="admin-card">
+  <div class="header">
+    <div>
+      <p class="eyebrow">Admin</p>
+      <h1>Create new product</h1>
+      <p class="lede">Add a product with multiple options; this uses mock data for now and will wire to the backend later.</p>
+    </div>
+    <a class="btn ghost" routerLink="/">Back to catalog</a>
+  </div>
+
+  <form class="admin-form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <label class="field">
+        <span class="field-label">Name</span>
+        <div class="input-shell">
+          <input type="text" name="name" [(ngModel)]="form.name" required />
+        </div>
+      </label>
+      <label class="field">
+        <span class="field-label">Brand</span>
+        <div class="input-shell">
+          <input type="text" name="brand" [(ngModel)]="form.brand" required />
+        </div>
+      </label>
+      <label class="field">
+        <span class="field-label">Category</span>
+        <div class="input-shell">
+          <input type="text" name="category" [(ngModel)]="form.category" required />
+        </div>
+      </label>
+      <label class="field">
+        <span class="field-label">Upload image</span>
+        <div class="input-shell file-shell">
+          <input type="file" accept="image/*" (change)="handleImageUpload($event)" />
+        </div>
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="field-label">Description</span>
+      <div class="input-shell textarea-shell">
+        <textarea rows="3" name="description" [(ngModel)]="form.description" placeholder="Short description"></textarea>
+      </div>
+    </label>
+
+    <div class="form-grid">
+      <label class="field">
+        <span class="field-label">Option label</span>
+        <div class="input-shell">
+          <input type="text" name="optionLabel" [(ngModel)]="form.optionLabel" placeholder="e.g., 500ml" />
+        </div>
+      </label>
+      <label class="field">
+        <span class="field-label">Min quantity</span>
+        <div class="input-shell">
+          <input type="number" name="optionMinQty" [(ngModel)]="form.optionMinQty" min="1" />
+        </div>
+      </label>
+      <div class="field add-option">
+        <span class="field-label">&nbsp;</span>
+        <button class="btn ghost" type="button" (click)="addOption()">Add option</button>
+      </div>
+    </div>
+
+    @if (form.options.length) {
+      <div class="options-list">
+        @for (opt of form.options; let i = $index; track i) {
+          <div class="option-pill">
+            <span>{{ opt.label }} · Min {{ opt.minQty }}</span>
+            <button type="button" class="icon-btn" (click)="removeOption(i)">✕</button>
+          </div>
+        }
+      </div>
+    }
+
+    <div class="actions">
+      <button class="btn primary" type="submit">Add product</button>
+      <button class="btn ghost" type="button" (click)="form = { name: '', brand: '', category: '', description: '', imageUrl: '', optionLabel: '', optionMinQty: 1, options: [] }">Clear</button>
+    </div>
+  </form>
+</div>

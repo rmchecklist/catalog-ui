@@ -1,0 +1,60 @@
+<div class="cart-grid">
+  <div class="cart-card">
+    <p class="eyebrow">Quote cart</p>
+    <h1>Items selected</h1>
+    @if (items().length) {
+      <div class="cart-items">
+        @for (item of items(); track item.id) {
+          <div class="cart-row">
+            <div>
+              <div class="item-name">{{ item.name }}</div>
+              <div class="item-meta">Option: {{ item.option }} · Min {{ item.minQty }}</div>
+              @if (!item.available) { <div class="status unavailable">Out of stock</div> }
+            </div>
+            <div class="quantity">
+              <label>
+                <span>Qty</span>
+                <input
+                  type="number"
+                  class="qty-input"
+                  [min]="item.minQty"
+                  [disabled]="!item.available"
+                  [ngModel]="item.quantity"
+                  (ngModelChange)="onQtyChange(item.id, item.minQty, item.available, $event)"
+                />
+              </label>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="muted">No items yet. Add products from the catalog.</p>
+    }
+  </div>
+
+  <div class="form-card">
+    <p class="eyebrow">Request quote</p>
+    <h2>Contact details</h2>
+    <form class="quote-form">
+      <label class="field">
+        <span class="field-label">Name</span>
+        <div class="input-shell">
+          <input type="text" placeholder="Your name" [(ngModel)]="form.name" name="name" />
+        </div>
+      </label>
+      <label class="field">
+        <span class="field-label">Email</span>
+        <div class="input-shell">
+          <input type="email" placeholder="you@example.com" [(ngModel)]="form.email" name="email" />
+        </div>
+      </label>
+      <label class="field">
+        <span class="field-label">Special instructions</span>
+        <div class="input-shell textarea-shell">
+          <textarea rows="4" placeholder="Any notes or delivery needs" [(ngModel)]="form.instructions" name="instructions"></textarea>
+        </div>
+      </label>
+      <button class="btn primary" type="button">Send quote request</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<mat-toolbar color="primary" class="app-toolbar" role="navigation">
+  <span class="brand" routerLink="/">Catalog</span>
+  <span class="spacer"></span>
+  <a
+    mat-button
+    routerLink="/"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    >Catalog</a
+  >
+  <a mat-button routerLink="/quote" routerLinkActive="active-link">
+    Quote Cart @if (quoteCount() > 0) {
+    <span class="count-badge">{{ quoteCount() }}</span>
+    }
+  </a>
+  <a mat-button routerLink="/admin" routerLinkActive="active-link">Admin</a>
+  <button
+    mat-icon-button
+    type="button"
+    class="theme-toggle"
+    [attr.aria-label]="theme() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'"
+    (click)="toggleTheme()"
+  >
+    <mat-icon>{{ theme() === 'light' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+  </button>
+</mat-toolbar>
+
+<main class="app-content">
+  <div class="content-container">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+
+<footer class="app-footer">
+  <div>Product Catalog &amp; Quotes</div>
+  <div class="footer-links">
+    <a routerLink="/">Home</a>
+    <a routerLink="/admin">Admin</a>
+  </div>
+</footer>

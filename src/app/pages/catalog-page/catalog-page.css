@@ -1,0 +1,191 @@
+.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: color-mix(in srgb, var(--card-color) 85%, var(--surface-color));
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevated-shadow);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--muted-color) 70%, var(--text-color));
+  margin: 0 0 0.25rem 0;
+}
+
+h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+}
+
+.lede {
+  margin: 0 0 1rem 0;
+  color: var(--muted-color);
+  max-width: 52ch;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--muted-color);
+}
+
+.field-label {
+  font-size: 0.9rem;
+}
+
+.input-shell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0 0.75rem;
+  min-height: var(--control-height);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.input-shell input,
+.input-shell select {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--text-color);
+  outline: none;
+  font-family: inherit;
+}
+
+.input-shell select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted-color) 50%), linear-gradient(135deg, var(--muted-color) 50%, transparent 50%);
+  background-position: calc(100% - 15px) calc(50% - 3px), calc(100% - 10px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 1.5rem;
+}
+
+.input-shell:focus-within {
+  border-color: color-mix(in srgb, var(--primary-500) 70%, var(--border-color));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-500) 10%, transparent);
+}
+
+.suffix {
+  color: var(--muted-color);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+  margin-right: 0.5rem;
+}
+
+.product-card {
+  background: var(--card-color);
+  box-shadow: var(--elevated-shadow);
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-radius: var(--radius-lg);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease, background 150ms ease;
+  padding: 1rem 1.25rem;
+}
+
+.thumb {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--elevated-shadow);
+  background: var(--surface-color);
+  max-height: 180px;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--primary-500) 35%, var(--border-color));
+  background: color-mix(in srgb, var(--primary-500) 4%, var(--card-color));
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.card-header h2 {
+  margin: 0.2rem 0 0 0;
+  font-size: 1.2rem;
+}
+
+.description {
+  color: var(--muted-color);
+  margin: 0;
+  min-height: 48px;
+  line-height: 1.5;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.75rem;
+  background: color-mix(in srgb, var(--surface-color) 70%, var(--card-color));
+}
+
+.chip.unavailable {
+  opacity: 0.65;
+}
+
+.chip-sub {
+  color: var(--muted-color);
+  margin-left: 0.2rem;
+  font-size: 0.85em;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}

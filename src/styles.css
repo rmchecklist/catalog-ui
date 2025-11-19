@@ -1,0 +1,226 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Inter", sans-serif;
+  background: var(--surface-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+:root {
+  --primary-500: #0a84ff;
+  --primary-600: #006be6;
+  --accent-500: #30d158;
+  --surface-color: #f5f6f8;
+  --card-color: #ffffff;
+  --text-color: #0f172a;
+  --muted-color: #4d5562;
+  --border-color: #e5e6eb;
+  --elevated-shadow: 0 22px 70px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+  --radius-md: 12px;
+  --radius-lg: 14px;
+  --control-height: 42px;
+}
+
+body.dark-theme {
+  --surface-color: #0c0d11;
+  --card-color: #11131a;
+  --text-color: #e5e7eb;
+  --muted-color: #a1a5b1;
+  --border-color: #1d202a;
+  --elevated-shadow: 0 16px 50px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(0, 0, 0, 0.35);
+  background: var(--surface-color);
+  color: var(--text-color);
+}
+
+/* Light mode */
+body:not(.dark-theme) {
+  --surface-color: #f5f6f8;
+  --card-color: #ffffff;
+  --text-color: #0f172a;
+  --muted-color: #4d5562;
+  --border-color: #e5e6eb;
+  --elevated-shadow: 0 22px 70px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+  background: var(--surface-color);
+  color: var(--text-color);
+}
+
+a {
+  color: inherit;
+}
+
+.mat-mdc-card {
+  background: var(--card-color) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-lg) !important;
+}
+
+.mat-mdc-button-base {
+  border-radius: var(--radius-md) !important;
+  min-height: var(--control-height);
+}
+
+.mat-mdc-unelevated-button:not(.mat-mdc-button-disabled),
+.mat-mdc-outlined-button:not(.mat-mdc-button-disabled) {
+  border-radius: var(--radius-md) !important;
+}
+
+.mat-mdc-form-field {
+  border-radius: var(--radius-md);
+  width: 100%;
+}
+
+.mat-mdc-form-field .mat-mdc-text-field-wrapper {
+  border-radius: var(--radius-md) !important;
+  min-height: var(--control-height);
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+}
+
+.mat-mdc-form-field-flex {
+  align-items: center;
+}
+
+.mat-mdc-form-field-infix {
+  padding-block: 10px !important;
+}
+
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline__leading,
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline__notch,
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline__trailing {
+  border-color: var(--border-color);
+}
+
+.mat-mdc-form-field-appearance-outline.mat-focused .mdc-notched-outline__leading,
+.mat-mdc-form-field-appearance-outline.mat-focused .mdc-notched-outline__notch,
+.mat-mdc-form-field-appearance-outline.mat-focused .mdc-notched-outline__trailing {
+  border-color: color-mix(in srgb, var(--primary-500) 70%, var(--border-color));
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-500) 10%, transparent);
+}
+
+.mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.mat-mdc-select-panel {
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevated-shadow);
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+  color: var(--text-color);
+}
+
+.mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+  color: var(--primary-600);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  font-weight: 600;
+  font-size: 0.98rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.btn.primary {
+  background: linear-gradient(115deg, var(--primary-500), var(--primary-600));
+  color: #ffffff;
+  box-shadow: 0 12px 30px rgba(10, 132, 255, 0.28);
+}
+
+.btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 34px rgba(10, 132, 255, 0.35);
+}
+
+.btn.ghost {
+  background: var(--card-color);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.btn.ghost:hover {
+  border-color: color-mix(in srgb, var(--primary-500) 50%, var(--border-color));
+  background: color-mix(in srgb, var(--primary-500) 5%, var(--card-color));
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  text-decoration: none;
+  background: var(--card-color);
+  transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+}
+
+.icon-btn:hover {
+  border-color: color-mix(in srgb, var(--primary-500) 60%, var(--border-color));
+  transform: translateY(-1px);
+}
+
+.link {
+  color: var(--primary-600);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.mat-mdc-select-trigger {
+  min-height: calc(var(--control-height) - 6px);
+}
+
+.mat-mdc-standard-chip {
+  border-radius: 999px !important;
+  min-height: 36px !important;
+}
+
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(115deg, var(--primary-500), var(--primary-600));
+  color: #ffffff !important;
+  box-shadow: 0 12px 30px rgba(10, 132, 255, 0.28);
+}
+
+.mat-mdc-unelevated-button.mat-primary .mdc-button__label,
+.mat-mdc-raised-button.mat-primary .mdc-button__label {
+  color: #ffffff !important;
+}
+
+.mat-mdc-unelevated-button.mat-primary:hover,
+.mat-mdc-raised-button.mat-primary:hover {
+  box-shadow: 0 14px 34px rgba(10, 132, 255, 0.35);
+}
+
+.mat-mdc-outlined-button.mat-primary {
+  border-color: color-mix(in srgb, var(--primary-500) 55%, var(--border-color));
+  color: var(--primary-500);
+}
+
+.mat-mdc-outlined-button.mat-primary:hover {
+  background: color-mix(in srgb, var(--primary-500) 8%, transparent);
+}
+
+.mat-mdc-outlined-button,
+.mat-mdc-stroked-button {
+  border-radius: var(--radius-md) !important;
+}

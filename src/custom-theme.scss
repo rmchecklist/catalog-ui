@@ -1,0 +1,44 @@
+@use '@angular/material' as mat;
+
+// Core resets
+@include mat.core();
+
+// Base palettes (Apple-ish blue + cyan accent)
+$primary-palette: mat.$blue-palette;
+$tertiary-palette: mat.$cyan-palette;
+$typography: (
+  brand-family: (-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Inter", sans-serif),
+  plain-family: (-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Inter", sans-serif),
+);
+
+$light-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: $primary-palette,
+    tertiary: $tertiary-palette,
+  ),
+  typography: $typography,
+  density: (scale: 0)
+));
+
+$dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: $primary-palette,
+    tertiary: $tertiary-palette,
+  ),
+  typography: $typography,
+  density: (scale: 0)
+));
+
+/* Light theme variables on :root */
+:root {
+  color-scheme: light;
+  @include mat.all-component-themes($light-theme);
+}
+
+/* Dark theme scopes when body has .dark-theme (toggled in app.ts) */
+body.dark-theme {
+  color-scheme: dark;
+  @include mat.all-component-themes($dark-theme);
+}

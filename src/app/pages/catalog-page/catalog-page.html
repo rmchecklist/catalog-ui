@@ -1,0 +1,78 @@
+<section class="hero">
+  <div>
+    <p class="eyebrow">Browse</p>
+    <h1>Products ready for quoting</h1>
+    <p class="lede">
+      Search by brand or category, add options to your quote cart, and request pricing.
+    </p>
+    <div class="hero-actions">
+      <button class="btn primary" routerLink="/quote">Go to quote cart</button>
+      <button class="btn ghost" routerLink="/admin">Admin</button>
+    </div>
+  </div>
+  <div class="filters">
+    <label class="field">
+      <span class="field-label">Search</span>
+      <div class="input-shell">
+        <input type="search" placeholder="Search products" [(ngModel)]="searchTerm" />
+        <span class="suffix">🔍</span>
+      </div>
+    </label>
+    <label class="field">
+      <span class="field-label">Brand</span>
+      <div class="input-shell">
+        <select [(ngModel)]="selectedBrand">
+          <option value="">All</option>
+          @for (brand of brands(); track brand) {
+            <option [value]="brand">{{ brand }}</option>
+          }
+        </select>
+      </div>
+    </label>
+    <label class="field">
+      <span class="field-label">Category</span>
+      <div class="input-shell">
+        <select [(ngModel)]="selectedCategory">
+          <option value="">All</option>
+          @for (category of categories(); track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </div>
+    </label>
+  </div>
+</section>
+
+<section class="grid">
+  @for (product of filteredProducts(); track product.slug) {
+  <div class="product-card">
+    @if(product.imageUrl){
+    <div class="thumb">
+      <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+    </div>
+    }
+
+    <div class="card-header">
+      <div>
+        <p class="eyebrow">{{ product.brand }} · {{ product.category }}</p>
+        <h2>{{ product.name }}</h2>
+      </div>
+      <a class="icon-btn" [routerLink]="['/products', product.slug]" aria-label="View details">↗</a>
+    </div>
+    <p class="description">{{ product.description }}</p>
+    <div class="options">
+      @for (option of product.options; track option.label) {
+      <span class="chip" [class.unavailable]="option.available === false">
+        {{ option.label }}
+        @if (option.minQty) { <span class="chip-sub"> · Min {{ option.minQty }}</span> } @if
+        (option.available === false) { <span class="chip-sub"> · Unavailable</span> }
+      </span>
+      }
+    </div>
+    <div class="card-actions">
+      <button class="btn ghost">Add to quote</button>
+      <a class="link" [routerLink]="['/products', product.slug]">Details</a>
+    </div>
+  </div>
+  }
+</section>

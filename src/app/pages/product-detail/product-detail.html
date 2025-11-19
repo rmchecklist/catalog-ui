@@ -1,0 +1,44 @@
+@if (product(); as p) {
+  <div class="detail-card">
+    <div class="detail-layout">
+      @if (p.imageUrl) {
+        <div class="media">
+          <img [src]="p.imageUrl" [alt]="p.name" loading="lazy" />
+        </div>
+      }
+      <div class="content" [class.full-width]="!p.imageUrl">
+        <p class="eyebrow">{{ p.brand }} · {{ p.category }}</p>
+        <h1>{{ p.name }}</h1>
+        <p class="lede">{{ p.description }}</p>
+        <div class="options">
+          @for (option of p.options; track option.label) {
+            <div class="option-row">
+              <div class="option-line">
+                <span class="option-label">{{ option.label }}</span>
+                @if (option.weight) { <span class="option-meta">Weight: {{ option.weight }}</span> }
+                @if (option.minQty) { <span class="option-meta">Min qty: {{ option.minQty }}</span> }
+                @if (option.available === false) { <span class="option-meta">Unavailable</span> }
+              </div>
+              <div class="qty">
+                <label>
+                  <span>Qty</span>
+                  <input type="number" [min]="option.minQty || 1" [value]="option.minQty || 1" />
+                </label>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="actions">
+          <button class="btn primary">Add to quote</button>
+          <a class="btn ghost" routerLink="/">Back to catalog</a>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="detail-card">
+    <h1>Product not found</h1>
+    <p class="lede">Try returning to the catalog.</p>
+    <a class="btn ghost" routerLink="/">Back to catalog</a>
+  </div>
+}

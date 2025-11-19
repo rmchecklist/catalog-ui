@@ -1,0 +1,123 @@
+.detail-card {
+  background: var(--card-color);
+  box-shadow: var(--elevated-shadow);
+  border: 1px solid var(--border-color);
+  padding: 1.25rem 1.5rem;
+  border-radius: 12px;
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.media {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--elevated-shadow);
+  background: radial-gradient(circle at 30% 20%, rgba(10, 132, 255, 0.12), transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(48, 209, 88, 0.1), transparent 35%),
+    var(--card-color);
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.content.full-width {
+  grid-column: 1 / -1;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--muted-color);
+  margin: 0 0 0.25rem 0;
+}
+
+h1 {
+  margin: 0 0 0.5rem 0;
+}
+
+.lede {
+  margin: 0 0 1rem 0;
+  color: var(--muted-color);
+}
+
+.options {
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  background: var(--surface-color);
+}
+
+.option-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.option-row:last-child {
+  border-bottom: none;
+}
+
+.option-label {
+  font-weight: 600;
+}
+
+.option-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--text-color);
+}
+
+.option-meta {
+  color: var(--muted-color);
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.qty label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.3rem 0.6rem;
+  background: var(--card-color);
+}
+
+.qty input {
+  width: 90px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.qty input:focus {
+  border-bottom: 1px solid color-mix(in srgb, var(--primary-500) 60%, var(--border-color));
+}

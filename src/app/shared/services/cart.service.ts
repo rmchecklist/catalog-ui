@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
-import { catchError, tap, of } from 'rxjs';
+import { catchError, tap, of, EMPTY, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Product } from '../models/product';
 
 export interface CartItem {
   id: string;
@@ -72,5 +73,27 @@ export class CartService {
 
   setItems(items: CartItem[]) {
     this.itemsSignal.set(items);
+  }
+
+  addProductSelection(product: Product, optionLabel?: string): Observable<CartItem> {
+    const option =
+      product.options.find((opt) => opt.label === optionLabel) ??
+      product.options.find((opt) => opt.available !== false) ??
+      product.options[0];
+
+    if (!option) {
+      console.warn('No options available for product', product);
+      return EMPTY;
+    }
+
+    const payload: Omit<CartItem, 'id'> = {
+      name: product.name,
+      option: option.label,
+      minQty: option.minQty ?? 1,
+      quantity: option.minQty ?? 1,
+      available: option.available !== false
+    };
+
+    return this.addItem(payload);
   }
 }

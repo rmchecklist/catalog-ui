@@ -20,16 +20,14 @@
                 @if (option.available === false) { <span class="option-meta">Unavailable</span> }
               </div>
               <div class="qty">
-                <label>
-                  <span>Qty</span>
-                  <input type="number" [min]="option.minQty || 1" [value]="option.minQty || 1" />
-                </label>
+                <button class="btn ghost" type="button" (click)="addOptionToCart(option.label)">
+                  Add to quote
+                </button>
               </div>
             </div>
           }
         </div>
         <div class="actions">
-          <button class="btn primary">Add to quote</button>
           <a class="btn ghost" routerLink="/">Back to catalog</a>
         </div>
       </div>

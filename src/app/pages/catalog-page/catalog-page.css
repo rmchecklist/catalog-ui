@@ -171,10 +171,22 @@ h1 {
   border: 1px solid var(--border-color);
   padding: 0.4rem 0.75rem;
   background: color-mix(in srgb, var(--surface-color) 70%, var(--card-color));
+  cursor: pointer;
 }
 
 .chip.unavailable {
   opacity: 0.65;
+  pointer-events: none;
+}
+
+.chip.selected {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  color: #fff;
+}
+
+.chip.selected .chip-sub {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .chip-sub {

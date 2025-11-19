@@ -73,4 +73,24 @@ export class ProductService {
       .post<Product>(API_BASE, request)
       .pipe(tap((product) => this.productsSignal.update((items) => [...items, product])));
   }
+
+  updateProduct(slug: string, request: CreateProductRequest) {
+    return this.http
+      .put<Product>(`${API_BASE}/${slug}`, request)
+      .pipe(
+        tap((updated) =>
+          this.productsSignal.update((items) =>
+            items.map((item) => (item.slug === slug ? updated : item))
+          )
+        )
+      );
+  }
+
+  deleteProduct(slug: string) {
+    return this.http
+      .delete<void>(`${API_BASE}/${slug}`)
+      .pipe(
+        tap(() => this.productsSignal.update((items) => items.filter((item) => item.slug !== slug)))
+      );
+  }
 }

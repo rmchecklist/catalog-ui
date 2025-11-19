@@ -2,7 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ProductService } from '../../shared/services/product.service';
+import { ProductService, CreateProductRequest } from '../../shared/services/product.service';
+import { Product } from '../../shared/models/product';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -13,7 +17,9 @@ import { ProductService } from '../../shared/services/product.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminDashboardComponent {
-  private readonly products = inject(ProductService);
+  private readonly productService = inject(ProductService);
+  private readonly http = inject(HttpClient);
+  protected readonly products = this.productService.products;
 
   protected form = {
     name: '',
@@ -25,6 +31,11 @@ export class AdminDashboardComponent {
     optionMinQty: 1,
     options: [] as { label: string; minQty: number }[]
   };
+  protected uploadingImage = false;
+  protected uploadError: string | null = null;
+  protected uploadedImageName: string | null = null;
+  protected editingSlug: string | null = null;
+  protected showForm = false;
 
   protected submit() {
     if (!this.form.name || !this.form.brand || !this.form.category) {
@@ -41,7 +52,7 @@ export class AdminDashboardComponent {
       return;
     }
 
-    this.products.addProduct({
+    const payload: CreateProductRequest = {
       name: this.form.name,
       brand: this.form.brand,
       category: this.form.category,
@@ -51,7 +62,13 @@ export class AdminDashboardComponent {
         ...opt,
         available: true
       }))
-    }).subscribe(() => this.reset());
+    };
+
+    const request$ = this.editingSlug
+      ? this.productService.updateProduct(this.editingSlug, payload)
+      : this.productService.addProduct(payload);
+
+    request$.subscribe(() => this.closeModal());
   }
 
   protected addOption() {
@@ -71,18 +88,58 @@ export class AdminDashboardComponent {
     this.form.options = this.form.options.filter((_, i) => i !== index);
   }
 
+  protected startEdit(product: Product) {
+    this.editingSlug = product.slug;
+    this.form = {
+      name: product.name,
+      brand: product.brand,
+      category: product.category,
+      description: product.description,
+      imageUrl: product.imageUrl ?? '',
+      optionLabel: '',
+      optionMinQty: 1,
+      options: product.options.map((opt) => ({
+        label: opt.label,
+        minQty: opt.minQty ?? 1
+      }))
+    };
+    this.uploadedImageName = product.imageUrl ? 'Existing image' : null;
+    this.uploadError = null;
+    this.showForm = true;
+  }
+
+  protected deleteProduct(slug: string) {
+    if (!confirm('Delete this product?')) {
+      return;
+    }
+    this.productService.deleteProduct(slug).subscribe();
+    if (this.editingSlug === slug) {
+      this.closeModal();
+    }
+  }
+
   protected handleImageUpload(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.form.imageUrl = typeof reader.result === 'string' ? reader.result : '';
-    };
-    reader.readAsDataURL(file);
+    const formData = new FormData();
+    formData.append('file', file);
+    this.uploadingImage = true;
+    this.uploadError = null;
+    this.http.post<{ url: string; path: string }>(`${environment.apiBaseUrl}/storage/upload`, formData)
+      .pipe(finalize(() => (this.uploadingImage = false)))
+      .subscribe({
+        next: (response) => {
+          this.form.imageUrl = response.url;
+          this.uploadedImageName = file.name;
+        },
+        error: () => {
+          this.uploadError = 'Failed to upload image. Please try again.';
+        }
+      });
   }
 
-  private reset() {
+  protected reset() {
     this.form = {
       name: '',
       brand: '',
@@ -93,5 +150,19 @@ export class AdminDashboardComponent {
       optionMinQty: 1,
       options: []
     };
+    this.uploadingImage = false;
+    this.uploadError = null;
+    this.uploadedImageName = null;
+    this.editingSlug = null;
+  }
+
+  protected openCreateModal() {
+    this.reset();
+    this.showForm = true;
+  }
+
+  protected closeModal() {
+    this.showForm = false;
+    this.reset();
   }
 }

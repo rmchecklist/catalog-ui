@@ -62,15 +62,20 @@
     <p class="description">{{ product.description }}</p>
     <div class="options">
       @for (option of product.options; track option.label) {
-      <span class="chip" [class.unavailable]="option.available === false">
-        {{ option.label }}
-        @if (option.minQty) { <span class="chip-sub"> · Min {{ option.minQty }}</span> } @if
-        (option.available === false) { <span class="chip-sub"> · Unavailable</span> }
-      </span>
+        <span
+          class="chip"
+          [class.unavailable]="option.available === false"
+          [class.selected]="selectedOptions()[product.slug] === option.label"
+          (click)="selectOption(product.slug, option.label)"
+        >
+          {{ option.label }}
+          @if (option.minQty) { <span class="chip-sub"> · Min {{ option.minQty }}</span> }
+          @if (option.available === false) { <span class="chip-sub"> · Unavailable</span> }
+        </span>
       }
     </div>
     <div class="card-actions">
-      <button class="btn ghost">Add to quote</button>
+      <button class="btn ghost" type="button" (click)="addToQuote(product)">Add to quote</button>
       <a class="link" [routerLink]="['/products', product.slug]">Details</a>
     </div>
   </div>

@@ -1,6 +1,6 @@
 {
   "/catalog/api": {
-    "target": "http://localhost:8080",
+    "target": "https://catalog-api-80xe.onrender.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info"

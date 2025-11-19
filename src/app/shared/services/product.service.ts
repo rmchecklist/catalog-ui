@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { tap, catchError, of } from 'rxjs';
 import { Product } from '../models/product';
+import { environment } from '../../../environments/environment';
 
-const API_BASE = `/catalog/api/products`;
+const API_BASE = `${environment.apiBaseUrl}/products`;
 
 export interface CreateProductRequest {
   name: string;

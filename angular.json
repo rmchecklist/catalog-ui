@@ -66,8 +66,7 @@
               "buildTarget": "catalog-ui:build:production"
             },
             "development": {
-              "buildTarget": "catalog-ui:build:development",
-              "proxyConfig": "proxy.conf.json"
+              "buildTarget": "catalog-ui:build:development"
             }
           },
           "defaultConfiguration": "development"

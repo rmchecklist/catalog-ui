@@ -1,4 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
+import { catchError, tap, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface CartItem {
   id: string;
@@ -9,13 +12,12 @@ export interface CartItem {
   available: boolean;
 }
 
+const CART_API = `${environment.apiBaseUrl}/cart`;
+
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private readonly itemsSignal = signal<CartItem[]>([
-    { id: 'stainless-bottle-750', name: 'Stainless Bottle', option: '750ml', minQty: 25, quantity: 25, available: true },
-    { id: 'eco-mailer-m', name: 'Eco Mailer', option: 'M', minQty: 100, quantity: 200, available: true },
-    { id: 'hex-bolt-m10x50', name: 'Carbon Steel Hex Bolt', option: 'M10 x 50', minQty: 50, quantity: 50, available: false }
-  ]);
+  private readonly itemsSignal = signal<CartItem[]>([]);
+  readonly loading = signal(false);
 
   readonly items = this.itemsSignal.asReadonly();
 
@@ -25,13 +27,46 @@ export class CartService {
       .reduce((sum, item) => sum + (item.quantity || 0), 0)
   );
 
-  updateQuantity(id: string, quantity: number) {
-    this.itemsSignal.update((items) =>
-      items.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(item.minQty ?? 1, Math.floor(quantity || 0)) }
-          : item
+  constructor(private readonly http: HttpClient) {
+    this.refresh();
+  }
+
+  refresh() {
+    this.loading.set(true);
+    this.http
+      .get<CartItem[]>(CART_API)
+      .pipe(
+        tap((items) => this.itemsSignal.set(items)),
+        catchError((err) => {
+          console.error('Failed to load cart', err);
+          return of([] as CartItem[]);
+        })
       )
+      .subscribe({
+        complete: () => this.loading.set(false)
+      });
+  }
+
+  addItem(payload: Omit<CartItem, 'id'>) {
+    return this.http.post<CartItem>(CART_API, payload).pipe(
+      tap((item) => this.itemsSignal.update((items) => [...items, item]))
+    );
+  }
+
+  updateQuantity(id: string, quantity: number) {
+    const body = { quantity };
+    return this.http.patch<CartItem>(`${CART_API}/${id}`, body).pipe(
+      tap((updated) =>
+        this.itemsSignal.update((items) =>
+          items.map((item) => (item.id === updated.id ? updated : item))
+        )
+      )
+    );
+  }
+
+  removeItem(id: string) {
+    return this.http.delete<void>(`${CART_API}/${id}`).pipe(
+      tap(() => this.itemsSignal.update((items) => items.filter((item) => item.id !== id)))
     );
   }
 

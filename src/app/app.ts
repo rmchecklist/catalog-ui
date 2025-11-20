@@ -26,7 +26,7 @@ import { CartService } from './shared/services/cart.service';
 export class App {
   private readonly cart = inject(CartService);
   protected readonly theme = signal<'light' | 'dark'>('light');
-  protected readonly quoteCount = this.cart.totalQuantity;
+  protected readonly quoteCount = this.cart.totalCount;
 
   constructor() {
     effect(() => {

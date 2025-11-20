@@ -21,10 +21,16 @@
     <label class="field">
       <span class="field-label">Brand</span>
       <div class="input-shell">
-        <select [(ngModel)]="selectedBrand">
-          <option value="">All</option>
-          @for (brand of brands(); track brand) {
-            <option [value]="brand">{{ brand }}</option>
+        <select [(ngModel)]="selectedBrand" [disabled]="loading()">
+          <option value="">All brands</option>
+          @if (brands().length) {
+            @for (brand of brands(); track brand) {
+              <option [value]="brand">{{ brand }}</option>
+            }
+          } @else if (loading()) {
+            <option disabled>Loading...</option>
+          } @else {
+            <option disabled>No brands</option>
           }
         </select>
       </div>
@@ -32,10 +38,16 @@
     <label class="field">
       <span class="field-label">Category</span>
       <div class="input-shell">
-        <select [(ngModel)]="selectedCategory">
-          <option value="">All</option>
-          @for (category of categories(); track category) {
-            <option [value]="category">{{ category }}</option>
+        <select [(ngModel)]="selectedCategory" [disabled]="loading()">
+          <option value="">All categories</option>
+          @if (categories().length) {
+            @for (category of categories(); track category) {
+              <option [value]="category">{{ category }}</option>
+            }
+          } @else if (loading()) {
+            <option disabled>Loading...</option>
+          } @else {
+            <option disabled>No categories</option>
           }
         </select>
       </div>
@@ -44,7 +56,7 @@
 </section>
 
 <section class="grid">
-  @for (product of filteredProducts(); track product.slug) {
+  @for (product of products(); track product.slug) {
   <div class="product-card">
     @if(product.imageUrl){
     <div class="thumb">

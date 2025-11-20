@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Product } from '../../shared/models/product';
 import { ProductService } from '../../shared/services/product.service';
 import { computed, Signal } from '@angular/core';
@@ -21,7 +21,6 @@ export class CatalogPageComponent {
   protected selectedCategory = '';
 
   protected readonly products: Signal<Product[]>;
-  protected readonly filteredProducts: Signal<Product[]>;
   protected readonly brands: Signal<string[]>;
   protected readonly categories: Signal<string[]>;
   protected readonly loading: Signal<boolean>;
@@ -29,27 +28,37 @@ export class CatalogPageComponent {
 
   constructor(
     private readonly productService: ProductService,
-    private readonly cartService: CartService
+    private readonly cartService: CartService,
+    private readonly router: Router
   ) {
     this.products = productService.products;
     this.loading = productService.loading;
 
-    // ensure fetch from API
-    this.productService.refresh();
+    effect(() => {
+      this.productService.refresh({
+        search: this.searchTerm,
+        brand: this.selectedBrand,
+        category: this.selectedCategory
+      });
+    });
 
-    this.brands = computed(() => Array.from(new Set(this.products().map((p) => p.brand))));
-    this.categories = computed(() => Array.from(new Set(this.products().map((p) => p.category))));
-    this.filteredProducts = computed(() =>
-      this.products().filter((product) => {
-        const matchesSearch =
-          !this.searchTerm ||
-          product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          product.description.toLowerCase().includes(this.searchTerm.toLowerCase());
-        const matchesBrand = !this.selectedBrand || product.brand === this.selectedBrand;
-        const matchesCategory =
-          !this.selectedCategory || product.category === this.selectedCategory;
-        return matchesSearch && matchesBrand && matchesCategory;
-      })
+    this.brands = computed(() =>
+      Array.from(
+        new Set(
+          this.products()
+            .map((p) => p.brand?.trim())
+            .filter((v): v is string => !!v)
+        )
+      ).sort((a, b) => a.localeCompare(b))
+    );
+    this.categories = computed(() =>
+      Array.from(
+        new Set(
+          this.products()
+            .map((p) => p.category?.trim())
+            .filter((v): v is string => !!v)
+        )
+      ).sort((a, b) => a.localeCompare(b))
     );
 
     // effect(() => {
@@ -74,6 +83,8 @@ export class CatalogPageComponent {
 
   protected addToQuote(product: Product) {
     const option = this.selectedOptions()[product.slug];
-    this.cartService.addProductSelection(product, option).subscribe();
+    this.router.navigate(['/products', product.slug], {
+      queryParams: option ? { option } : undefined
+    });
   }
 }

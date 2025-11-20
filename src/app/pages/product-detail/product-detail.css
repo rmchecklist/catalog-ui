@@ -76,6 +76,10 @@ h1 {
   border-bottom: none;
 }
 
+.option-row.unavailable {
+  opacity: 0.5;
+}
+
 .option-label {
   font-weight: 600;
 }

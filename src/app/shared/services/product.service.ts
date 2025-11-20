@@ -3,6 +3,7 @@ import { Injectable, Signal, computed, signal } from '@angular/core';
 import { tap, catchError, of } from 'rxjs';
 import { Product } from '../models/product';
 import { environment } from '../../../environments/environment';
+import { HttpParams } from '@angular/common/http';
 
 const API_BASE = `${environment.apiBaseUrl}/products`;
 
@@ -31,10 +32,20 @@ export class ProductService {
     this.refresh();
   }
 
-  refresh() {
+  refresh(filters?: { search?: string; brand?: string; category?: string }) {
     this.loading.set(true);
+    let params = new HttpParams();
+    if (filters?.search) {
+      params = params.set('search', filters.search);
+    }
+    if (filters?.brand) {
+      params = params.set('brand', filters.brand);
+    }
+    if (filters?.category) {
+      params = params.set('category', filters.category);
+    }
     this.http
-      .get<Product[]>(API_BASE)
+      .get<Product[]>(API_BASE, { params })
       .pipe(
         tap((products) => this.productsSignal.set(products)),
         catchError((err) => {

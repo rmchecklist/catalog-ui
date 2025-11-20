@@ -23,9 +23,15 @@
                   (ngModelChange)="onQtyChange(item.id, item.minQty, item.available, $event)"
                 />
               </label>
+              <button class="icon-btn danger" type="button" (click)="removeItem(item.id)" aria-label="Remove">
+                ✕
+              </button>
             </div>
           </div>
         }
+        <div class="cart-actions">
+          <button class="btn ghost" type="button" (click)="clearAll()">Clear all</button>
+        </div>
       </div>
     } @else {
       <p class="muted">No items yet. Add products from the catalog.</p>
@@ -54,7 +60,12 @@
           <textarea rows="4" placeholder="Any notes or delivery needs" [(ngModel)]="form.instructions" name="instructions"></textarea>
         </div>
       </label>
-      <button class="btn primary" type="button">Send quote request</button>
+      <button class="btn primary" type="button" (click)="submitQuote()" [disabled]="!items().length">
+        Send quote request
+      </button>
+      @if (submissionStatus === 'sent') {
+        <p class="status success">Quote captured. We will reach out soon.</p>
+      }
     </form>
   </div>
 </div>

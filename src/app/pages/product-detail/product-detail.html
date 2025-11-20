@@ -12,7 +12,7 @@
         <p class="lede">{{ p.description }}</p>
         <div class="options">
           @for (option of p.options; track option.label) {
-            <div class="option-row">
+            <div class="option-row" [class.unavailable]="option.available === false">
               <div class="option-line">
                 <span class="option-label">{{ option.label }}</span>
                 @if (option.weight) { <span class="option-meta">Weight: {{ option.weight }}</span> }
@@ -20,14 +20,30 @@
                 @if (option.available === false) { <span class="option-meta">Unavailable</span> }
               </div>
               <div class="qty">
-                <button class="btn ghost" type="button" (click)="addOptionToCart(option.label)">
-                  Add to quote
-                </button>
+                <label>
+                  Qty
+                  <input
+                    type="number"
+                    [min]="option.minQty ?? 1"
+                    step="1"
+                    [value]="quantities()[option.label] ?? option.minQty ?? 1"
+                    (input)="updateQuantity(option.label, $any($event.target).value)"
+                    [disabled]="option.available === false"
+                  />
+                </label>
               </div>
             </div>
           }
         </div>
         <div class="actions">
+          <button
+            class="btn primary"
+            type="button"
+            (click)="addSelectedOptionsToCart()"
+            [disabled]="selectedCount() === 0"
+          >
+            Add selected to quote
+          </button>
           <a class="btn ghost" routerLink="/">Back to catalog</a>
         </div>
       </div>

@@ -36,6 +36,9 @@ export class AdminDashboardComponent {
   protected uploadedImageName: string | null = null;
   protected editingSlug: string | null = null;
   protected showForm = false;
+  protected saving = false;
+  protected saveError: string | null = null;
+  protected deletePending: { slug: string; name: string } | null = null;
 
   protected submit() {
     if (!this.form.name || !this.form.brand || !this.form.category) {
@@ -64,11 +67,21 @@ export class AdminDashboardComponent {
       }))
     };
 
+    this.saving = true;
+    this.saveError = null;
+
     const request$ = this.editingSlug
       ? this.productService.updateProduct(this.editingSlug, payload)
       : this.productService.addProduct(payload);
 
-    request$.subscribe(() => this.closeModal());
+    request$.subscribe({
+      next: () => this.closeModal(),
+      error: (err) => {
+        console.error('Failed to save product', err);
+        this.saveError = 'Failed to save product. Please try again.';
+      },
+      complete: () => (this.saving = false)
+    });
   }
 
   protected addOption() {
@@ -105,17 +118,14 @@ export class AdminDashboardComponent {
     };
     this.uploadedImageName = product.imageUrl ? 'Existing image' : null;
     this.uploadError = null;
+    this.saveError = null;
     this.showForm = true;
   }
 
   protected deleteProduct(slug: string) {
-    if (!confirm('Delete this product?')) {
-      return;
-    }
-    this.productService.deleteProduct(slug).subscribe();
-    if (this.editingSlug === slug) {
-      this.closeModal();
-    }
+    const product = this.products().find((p) => p.slug === slug);
+    if (!product) return;
+    this.deletePending = { slug, name: product.name };
   }
 
   protected handleImageUpload(event: Event) {
@@ -154,6 +164,8 @@ export class AdminDashboardComponent {
     this.uploadError = null;
     this.uploadedImageName = null;
     this.editingSlug = null;
+    this.saveError = null;
+    this.saving = false;
   }
 
   protected openCreateModal() {
@@ -164,5 +176,20 @@ export class AdminDashboardComponent {
   protected closeModal() {
     this.showForm = false;
     this.reset();
+  }
+
+  protected confirmDelete() {
+    const pending = this.deletePending;
+    if (!pending) return;
+    this.productService.deleteProduct(pending.slug).subscribe(() => {
+      if (this.editingSlug === pending.slug) {
+        this.closeModal();
+      }
+      this.deletePending = null;
+    });
+  }
+
+  protected cancelDelete() {
+    this.deletePending = null;
   }
 }

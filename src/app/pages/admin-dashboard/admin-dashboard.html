@@ -1,23 +1,37 @@
-<div class="admin-card">
-  <div class="header">
-    <div>
-      <p class="eyebrow">Admin</p>
-      <h1>Product management</h1>
-      <p class="lede">Manage catalog items and upload imagery stored in Supabase.</p>
+<div class="admin-layout" [class.nav-collapsed]="!nav.sidenavOpen()">
+  <aside class="sidenav" [class.collapsed]="!nav.sidenavOpen()">
+    <div class="sidenav-header">
+      <h3>Admin</h3>
+      <button class="icon-btn" type="button" (click)="nav.close()">←</button>
     </div>
-    <div class="header-actions">
-      <button class="btn primary" type="button" (click)="openCreateModal()">Add product</button>
-      <a class="btn ghost" routerLink="/">Back to catalog</a>
-    </div>
-  </div>
+    <nav class="sidenav-links">
+      <a routerLink="/admin" routerLinkActive="active">Product management</a>
+      <a routerLink="/admin/communications" class="disabled">Communication</a>
+    </nav>
+  </aside>
 
-  @if (showForm) {
-  <div class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <h2>{{ editingSlug ? 'Edit product' : 'Create product' }}</h2>
-        <button type="button" class="icon-btn" (click)="closeModal()">✕</button>
+  <div class="admin-card">
+    <div class="header">
+      <div class="header-left">
+        <div>
+          <p class="eyebrow">Admin</p>
+          <h1>Product management</h1>
+          <p class="lede">Manage catalog items and upload imagery stored in Supabase.</p>
+        </div>
       </div>
+      <div class="header-actions">
+        <button class="btn primary" type="button" (click)="openCreateModal()">Add product</button>
+        <a class="btn ghost" routerLink="/">Back to catalog</a>
+      </div>
+    </div>
+
+    @if (showForm) {
+    <div class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>{{ editingSlug ? 'Edit product' : 'Create product' }}</h2>
+          <button type="button" class="icon-btn" (click)="closeModal()">✕</button>
+        </div>
       <form class="admin-form" (ngSubmit)="submit()">
         <div class="form-grid">
           <label class="field">

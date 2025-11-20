@@ -17,20 +17,24 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-.brand {
-  font-weight: 700;
-  letter-spacing: 0.04em;
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid var(--border-color);
-  background: color-mix(in srgb, var(--primary-500) 10%, transparent);
+}
+
+.brand-logo img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .spacer {
   flex: 1;
+}
+
+.nav-toggle {
+  margin-right: 0.25rem;
 }
 
 .active-link {
@@ -54,6 +58,17 @@
 
 .theme-toggle {
   margin-left: 0.25rem;
+}
+
+.user-menu-trigger {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.35rem;
+  text-transform: none;
+}
+
+.user-caret {
+  font-size: 18px;
 }
 
 .app-content {

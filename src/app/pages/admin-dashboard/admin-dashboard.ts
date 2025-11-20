@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ProductService, CreateProductRequest } from '../../shared/services/product.service';
-import { Product } from '../../shared/models/product';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { finalize } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Product } from '../../shared/models/product';
+import { CreateProductRequest, ProductService } from '../../shared/services/product.service';
+import { NavService } from '../../shared/services/nav.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -14,11 +15,12 @@ import { finalize } from 'rxjs';
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent {
   private readonly productService = inject(ProductService);
   private readonly http = inject(HttpClient);
+  protected readonly nav = inject(NavService);
   protected readonly products = this.productService.products;
 
   protected form = {
@@ -29,7 +31,7 @@ export class AdminDashboardComponent {
     imageUrl: '',
     optionLabel: '',
     optionMinQty: 1,
-    options: [] as { label: string; minQty: number }[]
+    options: [] as { label: string; minQty: number }[],
   };
   protected uploadingImage = false;
   protected uploadError: string | null = null;
@@ -49,8 +51,8 @@ export class AdminDashboardComponent {
     const options = this.form.options.length
       ? this.form.options
       : this.form.optionLabel
-        ? [{ label: this.form.optionLabel, minQty: Math.max(1, Number(this.form.optionMinQty) || 1) }]
-        : [];
+      ? [{ label: this.form.optionLabel, minQty: Math.max(1, Number(this.form.optionMinQty) || 1) }]
+      : [];
 
     if (!options.length) {
       return;
@@ -64,8 +66,8 @@ export class AdminDashboardComponent {
       imageUrl: this.form.imageUrl || undefined,
       options: options.map((opt) => ({
         ...opt,
-        available: true
-      }))
+        available: true,
+      })),
     };
 
     this.saving = true;
@@ -81,7 +83,7 @@ export class AdminDashboardComponent {
         console.error('Failed to save product', err);
         this.saveError = 'Failed to save product. Please try again.';
       },
-      complete: () => (this.saving = false)
+      complete: () => (this.saving = false),
     });
   }
 
@@ -91,8 +93,8 @@ export class AdminDashboardComponent {
       ...this.form.options,
       {
         label: this.form.optionLabel,
-        minQty: Math.max(1, Number(this.form.optionMinQty) || 1)
-      }
+        minQty: Math.max(1, Number(this.form.optionMinQty) || 1),
+      },
     ];
     this.form.optionLabel = '';
     this.form.optionMinQty = 1;
@@ -114,8 +116,8 @@ export class AdminDashboardComponent {
       optionMinQty: 1,
       options: product.options.map((opt) => ({
         label: opt.label,
-        minQty: opt.minQty ?? 1
-      }))
+        minQty: opt.minQty ?? 1,
+      })),
     };
     this.uploadedImageName = product.imageUrl ? 'Existing image' : null;
     this.uploadError = null;
@@ -146,7 +148,8 @@ export class AdminDashboardComponent {
     formData.append('file', file);
     this.uploadingImage = true;
     this.uploadError = null;
-    this.http.post<{ url: string; path: string }>(`${environment.apiBaseUrl}/storage/upload`, formData)
+    this.http
+      .post<{ url: string; path: string }>(`${environment.apiBaseUrl}/storage/upload`, formData)
       .pipe(finalize(() => (this.uploadingImage = false)))
       .subscribe({
         next: (response) => {
@@ -171,7 +174,7 @@ export class AdminDashboardComponent {
       imageUrl: '',
       optionLabel: '',
       optionMinQty: 1,
-      options: []
+      options: [],
     };
     this.uploadingImage = false;
     this.uploadError = null;
@@ -189,6 +192,10 @@ export class AdminDashboardComponent {
   protected closeModal() {
     this.showForm = false;
     this.reset();
+  }
+
+  protected toggleSidenav() {
+    this.nav.toggle();
   }
 
   protected confirmDelete() {

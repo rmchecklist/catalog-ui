@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="36" viewBox="0 0 140 36" fill="none">
+  <rect x="2" y="2" width="32" height="32" rx="8" fill="#0F172A" />
+  <path d="M12 24L18 12L24 24" stroke="#FBBF24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="18" cy="20" r="3" fill="#34D399"/>
+  <text x="44" y="24" fill="#0F172A" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700">Ilan Foods</text>
+</svg>

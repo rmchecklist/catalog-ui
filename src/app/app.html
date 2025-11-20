@@ -1,5 +1,18 @@
 <mat-toolbar color="primary" class="app-toolbar" role="navigation">
-  <span class="brand" routerLink="/">Ilan Foods</span>
+  @if (showAdminNav()) {
+    <button
+      mat-icon-button
+      type="button"
+      class="nav-toggle"
+      aria-label="Toggle menu"
+      (click)="toggleNav()"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
+  <a class="brand-logo" routerLink="/">
+    <img src="assets/ilan-logo.svg" alt="Ilan Foods" />
+  </a>
   <span class="spacer"></span>
   <a
     mat-button
@@ -13,7 +26,20 @@
     <span class="count-badge">{{ quoteCount() }}</span>
     }
   </a>
-  <a mat-button routerLink="/admin" routerLinkActive="active-link">Admin</a>
+  @if (user()) {
+    <a mat-button routerLink="/admin" routerLinkActive="active-link">Admin</a>
+  }
+  @if (user()) {
+  <button mat-button class="user-menu-trigger" [matMenuTriggerFor]="userMenu">
+    <span class="user-label">{{ user()?.email }}</span>
+    <mat-icon class="user-caret" iconPositionEnd>expand_more</mat-icon>
+  </button>
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
+  } @else {
+  <a mat-button routerLink="/login" routerLinkActive="active-link">Login</a>
+  }
   <button
     mat-icon-button
     type="button"
@@ -35,6 +61,8 @@
   <div>Product Catalog &amp; Quotes</div>
   <div class="footer-links">
     <a routerLink="/">Home</a>
-    <a routerLink="/admin">Admin</a>
+    @if (user()) {
+      <a routerLink="/admin">Admin</a>
+    }
   </div>
 </footer>

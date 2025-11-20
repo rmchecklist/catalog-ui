@@ -7,7 +7,6 @@
     </p>
     <div class="hero-actions">
       <button class="btn primary" routerLink="/quote">Go to quote cart</button>
-      <button class="btn ghost" routerLink="/admin">Admin</button>
     </div>
   </div>
   <div class="filters">
@@ -23,14 +22,12 @@
       <div class="input-shell">
         <select [(ngModel)]="selectedBrand" [disabled]="loading()">
           <option value="">All brands</option>
-          @if (brands().length) {
-            @for (brand of brands(); track brand) {
-              <option [value]="brand">{{ brand }}</option>
-            }
-          } @else if (loading()) {
-            <option disabled>Loading...</option>
+          @if (brands().length) { @for (brand of brands(); track brand) {
+          <option [value]="brand">{{ brand }}</option>
+          } } @else if (loading()) {
+          <option disabled>Loading...</option>
           } @else {
-            <option disabled>No brands</option>
+          <option disabled>No brands</option>
           }
         </select>
       </div>
@@ -40,14 +37,12 @@
       <div class="input-shell">
         <select [(ngModel)]="selectedCategory" [disabled]="loading()">
           <option value="">All categories</option>
-          @if (categories().length) {
-            @for (category of categories(); track category) {
-              <option [value]="category">{{ category }}</option>
-            }
-          } @else if (loading()) {
-            <option disabled>Loading...</option>
+          @if (categories().length) { @for (category of categories(); track category) {
+          <option [value]="category">{{ category }}</option>
+          } } @else if (loading()) {
+          <option disabled>Loading...</option>
           } @else {
-            <option disabled>No categories</option>
+          <option disabled>No categories</option>
           }
         </select>
       </div>
@@ -74,16 +69,16 @@
     <p class="description">{{ product.description }}</p>
     <div class="options">
       @for (option of product.options; track option.label) {
-        <span
-          class="chip"
-          [class.unavailable]="option.available === false"
-          [class.selected]="selectedOptions()[product.slug] === option.label"
-          (click)="selectOption(product.slug, option.label)"
-        >
-          {{ option.label }}
-          @if (option.minQty) { <span class="chip-sub"> · Min {{ option.minQty }}</span> }
-          @if (option.available === false) { <span class="chip-sub"> · Unavailable</span> }
-        </span>
+      <span
+        class="chip"
+        [class.unavailable]="option.available === false"
+        [class.selected]="selectedOptions()[product.slug] === option.label"
+        (click)="selectOption(product.slug, option.label)"
+      >
+        {{ option.label }}
+        @if (option.minQty) { <span class="chip-sub"> · Min {{ option.minQty }}</span> } @if
+        (option.available === false) { <span class="chip-sub"> · Unavailable</span> }
+      </span>
       }
     </div>
     <div class="card-actions">

@@ -1,3 +1,64 @@
+.admin-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.admin-layout.nav-collapsed {
+  grid-template-columns: 0 minmax(0, 1fr);
+}
+
+.sidenav {
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--elevated-shadow);
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 80px);
+  transition: width 150ms ease, opacity 150ms ease, padding 150ms ease;
+}
+
+.sidenav.collapsed {
+  width: 0;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidenav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.sidenav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sidenav-links a {
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  color: var(--text-color);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.sidenav-links a.active {
+  background: color-mix(in srgb, var(--primary-500) 12%, var(--card-color));
+  border-color: color-mix(in srgb, var(--primary-500) 30%, var(--border-color));
+}
+
+.sidenav-links a.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .admin-card {
   background: var(--card-color);
   box-shadow: var(--elevated-shadow);
@@ -29,6 +90,12 @@ h1 {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.header-left {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 }
 
 .header-actions {

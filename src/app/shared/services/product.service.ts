@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { tap, catchError, of } from 'rxjs';
 import { Product } from '../models/product';
 import { environment } from '../../../environments/environment';
+import { AuthService } from './auth.service';
 import { HttpParams } from '@angular/common/http';
 
 const API_BASE = `${environment.apiBaseUrl}/products`;
@@ -28,7 +29,7 @@ export class ProductService {
   readonly products: Signal<Product[]> = this.productsSignal.asReadonly();
   readonly loading = signal(false);
 
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient, private readonly auth: AuthService) {
     this.refresh();
   }
 
@@ -44,8 +45,10 @@ export class ProductService {
     if (filters?.category) {
       params = params.set('category', filters.category);
     }
+    const token = this.auth.getAccessToken();
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
     this.http
-      .get<Product[]>(API_BASE, { params })
+      .get<Product[]>(API_BASE, { params, headers })
       .pipe(
         tap((products) => this.productsSignal.set(products)),
         catchError((err) => {

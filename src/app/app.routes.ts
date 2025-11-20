@@ -3,11 +3,16 @@ import { CatalogPageComponent } from './pages/catalog-page/catalog-page';
 import { ProductDetailComponent } from './pages/product-detail/product-detail';
 import { QuoteCartComponent } from './pages/quote-cart/quote-cart';
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard';
+import { authGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: CatalogPageComponent },
   { path: 'products/:slug', component: ProductDetailComponent },
   { path: 'quote', component: QuoteCartComponent },
-  { path: 'admin', component: AdminDashboardComponent },
+  { path: 'admin', component: AdminDashboardComponent, canActivate: [authGuard] },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login').then((m) => m.LoginComponent)
+  },
   { path: '**', redirectTo: '' }
 ];

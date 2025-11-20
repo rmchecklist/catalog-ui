@@ -34,6 +34,7 @@ export class AdminDashboardComponent {
   protected uploadingImage = false;
   protected uploadError: string | null = null;
   protected uploadedImageName: string | null = null;
+  protected uploadWarning: string | null = null;
   protected editingSlug: string | null = null;
   protected showForm = false;
   protected saving = false;
@@ -132,6 +133,15 @@ export class AdminDashboardComponent {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
+    // basic client-side size check (e.g., 5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      this.uploadWarning = 'File too large (max 5MB).';
+      this.uploadError = null;
+      this.uploadedImageName = null;
+      return;
+    }
+    this.uploadWarning = null;
     const formData = new FormData();
     formData.append('file', file);
     this.uploadingImage = true;
@@ -142,10 +152,13 @@ export class AdminDashboardComponent {
         next: (response) => {
           this.form.imageUrl = response.url;
           this.uploadedImageName = file.name;
+          this.uploadWarning = null;
         },
-        error: () => {
+        error: (err) => {
+          console.error('Image upload failed', err);
           this.uploadError = 'Failed to upload image. Please try again.';
-        }
+          this.uploadedImageName = null;
+        },
       });
   }
 

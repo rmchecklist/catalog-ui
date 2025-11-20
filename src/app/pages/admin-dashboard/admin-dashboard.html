@@ -48,11 +48,18 @@
                 [disabled]="uploadingImage"
               />
             </div>
-            <small *ngIf="uploadingImage" class="upload-hint">Uploading image...</small>
-            <small *ngIf="uploadedImageName && !uploadingImage" class="upload-success"
-              >Uploaded: {{ uploadedImageName }}</small
-            >
-            <small *ngIf="uploadError" class="upload-error">{{ uploadError }}</small>
+            @if (uploadingImage) {
+              <small class="upload-hint">Uploading image...</small>
+            }
+            @if (uploadedImageName && !uploadingImage) {
+              <small class="upload-success">Uploaded: {{ uploadedImageName }}</small>
+            }
+            @if (uploadWarning) {
+              <small class="upload-warning">{{ uploadWarning }}</small>
+            }
+            @if (uploadError) {
+              <small class="upload-error">{{ uploadError }}</small>
+            }
           </label>
         </div>
 
@@ -109,7 +116,9 @@
           </button>
           <button class="btn ghost" type="button" (click)="closeModal()">Cancel</button>
         </div>
-        <div class="form-error" *ngIf="saveError">{{ saveError }}</div>
+        @if (saveError) {
+          <div class="form-error">{{ saveError }}</div>
+        }
       </form>
     </div>
   </div>

@@ -120,6 +120,11 @@ h1 {
   font-size: 0.85rem;
 }
 
+.upload-warning {
+  color: #b45309;
+  font-size: 0.85rem;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;

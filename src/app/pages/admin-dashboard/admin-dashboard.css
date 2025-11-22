@@ -54,11 +54,6 @@
   border-color: color-mix(in srgb, var(--primary-500) 30%, var(--border-color));
 }
 
-.sidenav-links a.disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .admin-card {
   background: var(--card-color);
   box-shadow: var(--elevated-shadow);
@@ -279,6 +274,30 @@ h1 {
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
   background: color-mix(in srgb, var(--surface-color) 60%, var(--card-color));
+}
+
+.options-editor {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+
+.options-head,
+.options-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(90px, 1fr)) 44px;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.options-head {
+  font-weight: 700;
+  color: var(--muted-color);
+  font-size: 0.9rem;
+}
+
+.options-row input {
+  width: 100%;
 }
 
 .form-error {

@@ -26,12 +26,26 @@ export class AdminDashboardComponent {
   protected form = {
     name: '',
     brand: '',
+    vendor: '',
     category: '',
     description: '',
     imageUrl: '',
     optionLabel: '',
+    optionWeight: '',
     optionMinQty: 1,
-    options: [] as { label: string; minQty: number }[],
+    optionPurchasePrice: 0,
+    optionSellingPrice: 0,
+    optionMarketPrice: 0,
+    optionSku: '',
+    options: [] as {
+      label: string;
+      minQty: number;
+      weight?: string;
+      purchasePrice?: number;
+      sellingPrice?: number;
+      marketPrice?: number;
+      sku?: string;
+    }[],
   };
   protected uploadingImage = false;
   protected uploadError: string | null = null;
@@ -50,17 +64,29 @@ export class AdminDashboardComponent {
 
     const options = this.form.options.length
       ? this.form.options
-      : this.form.optionLabel
-      ? [{ label: this.form.optionLabel, minQty: Math.max(1, Number(this.form.optionMinQty) || 1) }]
+      : this.form.optionLabel?.trim()
+      ? [
+          {
+            label: this.form.optionLabel.trim(),
+            minQty: Math.max(1, Number(this.form.optionMinQty) || 1),
+            weight: this.form.optionWeight || undefined,
+            purchasePrice: Number(this.form.optionPurchasePrice) || 0,
+            sellingPrice: Number(this.form.optionSellingPrice) || 0,
+            marketPrice: Number(this.form.optionMarketPrice) || 0,
+            sku: this.form.optionSku || undefined,
+          },
+        ]
       : [];
 
     if (!options.length) {
+      this.saveError = 'Add at least one option.';
       return;
     }
 
     const payload: CreateProductRequest = {
       name: this.form.name,
       brand: this.form.brand,
+      vendor: this.form.vendor || undefined,
       category: this.form.category,
       description: this.form.description || 'No description yet.',
       imageUrl: this.form.imageUrl || undefined,
@@ -88,16 +114,30 @@ export class AdminDashboardComponent {
   }
 
   protected addOption() {
-    if (!this.form.optionLabel) return;
+    if (!this.form.optionLabel?.trim()) {
+      this.saveError = 'Option label is required.';
+      return;
+    }
+    this.saveError = null;
     this.form.options = [
       ...this.form.options,
       {
-        label: this.form.optionLabel,
+        label: this.form.optionLabel.trim(),
         minQty: Math.max(1, Number(this.form.optionMinQty) || 1),
+        weight: this.form.optionWeight || undefined,
+        purchasePrice: Number(this.form.optionPurchasePrice) || 0,
+        sellingPrice: Number(this.form.optionSellingPrice) || 0,
+        marketPrice: Number(this.form.optionMarketPrice) || 0,
+        sku: this.form.optionSku || undefined,
       },
     ];
     this.form.optionLabel = '';
+    this.form.optionWeight = '';
     this.form.optionMinQty = 1;
+    this.form.optionPurchasePrice = 0;
+    this.form.optionSellingPrice = 0;
+    this.form.optionMarketPrice = 0;
+    this.form.optionSku = '';
   }
 
   protected removeOption(index: number) {
@@ -109,14 +149,25 @@ export class AdminDashboardComponent {
     this.form = {
       name: product.name,
       brand: product.brand,
+      vendor: product.vendor ?? '',
       category: product.category,
       description: product.description,
       imageUrl: product.imageUrl ?? '',
       optionLabel: '',
+      optionWeight: '',
       optionMinQty: 1,
+      optionPurchasePrice: 0,
+      optionSellingPrice: 0,
+      optionMarketPrice: 0,
+      optionSku: '',
       options: product.options.map((opt) => ({
         label: opt.label,
         minQty: opt.minQty ?? 1,
+        weight: opt.weight,
+        purchasePrice: opt.purchasePrice ?? 0,
+        sellingPrice: opt.sellingPrice ?? 0,
+        marketPrice: opt.marketPrice ?? 0,
+        sku: opt.sku,
       })),
     };
     this.uploadedImageName = product.imageUrl ? 'Existing image' : null;
@@ -169,11 +220,17 @@ export class AdminDashboardComponent {
     this.form = {
       name: '',
       brand: '',
+      vendor: '',
       category: '',
       description: '',
       imageUrl: '',
       optionLabel: '',
+      optionWeight: '',
       optionMinQty: 1,
+      optionPurchasePrice: 0,
+      optionSellingPrice: 0,
+      optionMarketPrice: 0,
+      optionSku: '',
       options: [],
     };
     this.uploadingImage = false;

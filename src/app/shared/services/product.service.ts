@@ -20,6 +20,10 @@ export interface CreateProductRequest {
     weight?: string;
     minQty: number;
     available?: boolean;
+    purchasePrice?: number;
+    sellingPrice?: number;
+    marketPrice?: number;
+    sku?: string;
   }>;
 }
 

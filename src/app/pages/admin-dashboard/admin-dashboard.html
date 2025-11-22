@@ -6,7 +6,7 @@
     </div>
     <nav class="sidenav-links">
       <a routerLink="/admin" routerLinkActive="active">Product management</a>
-      <a routerLink="/admin/communications" class="disabled">Communication</a>
+      <a routerLink="/admin/communications" routerLinkActive="active">Communication</a>
     </nav>
   </aside>
 
@@ -44,6 +44,12 @@
             <span class="field-label">Brand</span>
             <div class="input-shell">
               <input type="text" name="brand" [(ngModel)]="form.brand" required />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Vendor (optional)</span>
+            <div class="input-shell">
+              <input type="text" name="vendor" [(ngModel)]="form.vendor" />
             </div>
           </label>
           <label class="field">
@@ -102,9 +108,62 @@
             </div>
           </label>
           <label class="field">
+            <span class="field-label">Weight/pack (optional)</span>
+            <div class="input-shell">
+              <input
+                type="text"
+                name="optionWeight"
+                [(ngModel)]="form.optionWeight"
+                placeholder="e.g., 20lb"
+              />
+            </div>
+          </label>
+          <label class="field">
             <span class="field-label">Min quantity</span>
             <div class="input-shell">
               <input type="number" name="optionMinQty" [(ngModel)]="form.optionMinQty" min="1" />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Selling price</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionSellingPrice"
+                [(ngModel)]="form.optionSellingPrice"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Market price</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionMarketPrice"
+                [(ngModel)]="form.optionMarketPrice"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Purchase price (internal)</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionPurchasePrice"
+                [(ngModel)]="form.optionPurchasePrice"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">SKU (optional)</span>
+            <div class="input-shell">
+              <input type="text" name="optionSku" [(ngModel)]="form.optionSku" />
             </div>
           </label>
           <div class="field add-option">
@@ -114,10 +173,68 @@
         </div>
 
         @if (form.options.length) {
-        <div class="options-list">
+        <div class="options-editor">
+          <div class="options-head">
+            <span>Label</span>
+            <span>Weight</span>
+            <span>Min qty</span>
+            <span>Selling</span>
+            <span>Market</span>
+            <span>Purchase</span>
+            <span>SKU</span>
+            <span></span>
+          </div>
           @for (opt of form.options; let i = $index; track i) {
-          <div class="option-pill">
-            <span>{{ opt.label }} · Min {{ opt.minQty }}</span>
+          <div class="options-row">
+            <input
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].label"
+              placeholder="Label"
+            />
+            <input
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].weight"
+              placeholder="20lb"
+            />
+            <input
+              type="number"
+              min="1"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].minQty"
+              placeholder="1"
+            />
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].sellingPrice"
+              placeholder="0.00"
+            />
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].marketPrice"
+              placeholder="0.00"
+            />
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].purchasePrice"
+              placeholder="0.00"
+            />
+            <input
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].sku"
+              placeholder="SKU"
+            />
             <button type="button" class="icon-btn" (click)="removeOption(i)">✕</button>
           </div>
           }
@@ -137,25 +254,27 @@
     </div>
   </div>
   } @if (products().length) {
-  <section class="product-list">
-    <h2>Existing products</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Brand</th>
-          <th>Category</th>
-          <th>Options</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (product of products(); track product.slug) {
-        <tr [class.editing]="editingSlug === product.slug">
-          <td>{{ product.name }}</td>
-          <td>{{ product.brand }}</td>
-          <td>{{ product.category }}</td>
-          <td>{{ product.options.length }}</td>
+      <section class="product-list">
+        <h2>Existing products</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Brand</th>
+              <th>Vendor</th>
+              <th>Category</th>
+              <th>Options</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of products(); track product.slug) {
+            <tr [class.editing]="editingSlug === product.slug">
+              <td>{{ product.name }}</td>
+              <td>{{ product.brand }}</td>
+              <td>{{ product.vendor || '—' }}</td>
+              <td>{{ product.category }}</td>
+              <td>{{ product.options.length }}</td>
           <td class="table-actions">
             <button class="link-btn" type="button" (click)="startEdit(product)">Edit</button>
             <button class="link-btn danger" type="button" (click)="deleteProduct(product.slug)">

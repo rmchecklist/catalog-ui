@@ -26,7 +26,7 @@
                     type="number"
                     [min]="option.minQty ?? 1"
                     step="1"
-                    [value]="quantities()[option.label] ?? option.minQty ?? 1"
+                    [value]="quantities()[option.label] || option.minQty || 1"
                     (input)="updateQuantity(option.label, $any($event.target).value)"
                     [disabled]="option.available === false"
                   />

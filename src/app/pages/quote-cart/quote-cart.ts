@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../shared/services/cart.service';
+import { CommunicationService } from '../../shared/services/communication.service';
 
 @Component({
   selector: 'app-quote-cart',
@@ -13,6 +14,7 @@ import { CartService } from '../../shared/services/cart.service';
 })
 export class QuoteCartComponent {
   private readonly cart = inject(CartService);
+  private readonly comms = inject(CommunicationService);
   protected readonly items = this.cart.items;
   protected submissionStatus: 'idle' | 'sent' = 'idle';
 
@@ -42,13 +44,14 @@ export class QuoteCartComponent {
     if (!snapshot.length) {
       return;
     }
-    // TODO: send to backend/SES once endpoint is available
-    const payload = {
-      contact: { ...this.form },
-      items: snapshot
-    };
-    console.info('Quote submission stub', payload);
-    this.cart.clear();
-    this.submissionStatus = 'sent';
+    this.comms.sendQuote({ ...this.form }, snapshot).subscribe({
+      next: () => {
+        this.cart.clear();
+        this.submissionStatus = 'sent';
+      },
+      error: (err) => {
+        console.error('Failed to submit quote', err);
+      }
+    });
   }
 }

@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { Product } from '../../shared/models/product';
+import { RouterLink } from '@angular/router';
+import { Product, ProductOption } from '../../shared/models/product';
 import { ProductService } from '../../shared/services/product.service';
 import { computed, Signal } from '@angular/core';
 import { CartService } from '../../shared/services/cart.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-catalog-page',
@@ -24,12 +25,17 @@ export class CatalogPageComponent {
   protected readonly brands: Signal<string[]>;
   protected readonly categories: Signal<string[]>;
   protected readonly loading: Signal<boolean>;
-  protected readonly selectedOptions = signal<Record<string, string>>({});
+  protected readonly cartItems: Signal<any>;
+  protected readonly showPrices = computed(() => {
+    // touch user signal so changes propagate
+    this.auth.user();
+    return this.auth.hasAnyRole('ADMIN', 'CUSTOMER');
+  });
 
   constructor(
     private readonly productService: ProductService,
     private readonly cartService: CartService,
-    private readonly router: Router
+    private readonly auth: AuthService
   ) {
     this.products = productService.products;
     this.loading = productService.loading;
@@ -75,16 +81,32 @@ export class CatalogPageComponent {
     //   }
     //   this.selectedOptions.set(current);
     // });
+    this.cartItems = this.cartService.items;
   }
 
-  protected selectOption(slug: string, label: string) {
-    this.selectedOptions.update((map) => ({ ...map, [slug]: label }));
+  protected addOptionToQuote(product: Product, option: ProductOption) {
+    if (option.available === false || this.isInCart(product.slug, option.label)) {
+      return;
+    }
+    const min = option.minQty ?? 1;
+    this.cartService.addProductSelection(product, option.label, min).subscribe();
   }
 
-  protected addToQuote(product: Product) {
-    const option = this.selectedOptions()[product.slug];
-    this.router.navigate(['/products', product.slug], {
-      queryParams: option ? { option } : undefined
-    });
+  protected isInCart(slug: string, optionLabel: string): boolean {
+    return this.cartItems().some(
+      (item: { slug: string; option: string }) => item.slug === slug && item.option === optionLabel
+    );
+  }
+
+  protected discountPercent(option: ProductOption): number | null {
+    if (
+      option.marketPrice == null ||
+      option.sellingPrice == null ||
+      option.marketPrice <= option.sellingPrice
+    ) {
+      return null;
+    }
+    const discount = ((option.marketPrice - option.sellingPrice) / option.marketPrice) * 100;
+    return Math.round(discount);
   }
 }

@@ -4,6 +4,9 @@ export interface ProductOption {
   minQty?: number;
   available?: boolean;
   sku?: string;
+  purchasePrice?: number;
+  sellingPrice?: number;
+  marketPrice?: number;
 }
 
 export interface Product {

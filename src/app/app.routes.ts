@@ -1,15 +1,29 @@
 import { Routes } from '@angular/router';
-import { CatalogPageComponent } from './pages/catalog-page/catalog-page';
-import { ProductDetailComponent } from './pages/product-detail/product-detail';
-import { QuoteCartComponent } from './pages/quote-cart/quote-cart';
-import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard';
 import { authGuard } from './shared/guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: CatalogPageComponent },
-  { path: 'products/:slug', component: ProductDetailComponent },
-  { path: 'quote', component: QuoteCartComponent },
-  { path: 'admin', component: AdminDashboardComponent, canActivate: [authGuard] },
+  {
+    path: '',
+    loadComponent: () => import('./pages/catalog-page/catalog-page').then((m) => m.CatalogPageComponent)
+  },
+  {
+    path: 'products/:slug',
+    loadComponent: () => import('./pages/product-detail/product-detail').then((m) => m.ProductDetailComponent)
+  },
+  {
+    path: 'quote',
+    loadComponent: () => import('./pages/quote-cart/quote-cart').then((m) => m.QuoteCartComponent)
+  },
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboardComponent)
+  },
+  {
+    path: 'admin/communications',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/communications/communications').then((m) => m.CommunicationsComponent)
+  },
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login').then((m) => m.LoginComponent)

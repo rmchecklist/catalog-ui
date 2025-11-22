@@ -55,16 +55,30 @@
         </div>
       </label>
       <label class="field">
+        <span class="field-label">Phone</span>
+        <div class="input-shell">
+          <input type="tel" placeholder="Phone" [(ngModel)]="form.phone" name="phone" />
+        </div>
+      </label>
+      <label class="field">
+        <span class="field-label">Company</span>
+        <div class="input-shell">
+          <input type="text" placeholder="Company" [(ngModel)]="form.company" name="company" />
+        </div>
+      </label>
+      <label class="field">
         <span class="field-label">Special instructions</span>
         <div class="input-shell textarea-shell">
           <textarea rows="4" placeholder="Any notes or delivery needs" [(ngModel)]="form.instructions" name="instructions"></textarea>
         </div>
       </label>
-      <button class="btn primary" type="button" (click)="submitQuote()" [disabled]="!items().length">
+      <button class="btn primary" type="button" (click)="submitQuote()" [disabled]="!items().length || submitting">
         Send quote request
       </button>
       @if (submissionStatus === 'sent') {
         <p class="status success">Quote captured. We will reach out soon.</p>
+      } @if (error) {
+        <p class="status error">{{ error }}</p>
       }
     </form>
   </div>

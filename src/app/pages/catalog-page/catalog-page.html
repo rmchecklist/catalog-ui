@@ -86,7 +86,6 @@
             <span class="discount">-{{ discountPercent(option) }}%</span>
             }
           </div>
-          {{ showStock() }}
           @if (showStock() && option.stock != null) {
           <div class="stock-line" [class.low]="isLowStock(option)">
             <span class="stock-count">

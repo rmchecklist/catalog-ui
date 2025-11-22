@@ -37,6 +37,8 @@ export class AdminDashboardComponent {
     optionSellingPrice: 0,
     optionMarketPrice: 0,
     optionSku: '',
+    optionStock: 0,
+    optionLowStockThreshold: 10,
     options: [] as {
       label: string;
       minQty: number;
@@ -45,6 +47,8 @@ export class AdminDashboardComponent {
       sellingPrice?: number;
       marketPrice?: number;
       sku?: string;
+      stock?: number;
+      lowStockThreshold?: number;
     }[],
   };
   protected uploadingImage = false;
@@ -74,6 +78,10 @@ export class AdminDashboardComponent {
             sellingPrice: Number(this.form.optionSellingPrice) || 0,
             marketPrice: Number(this.form.optionMarketPrice) || 0,
             sku: this.form.optionSku || undefined,
+            stock: Number.isFinite(this.form.optionStock) ? Number(this.form.optionStock) : 0,
+            lowStockThreshold: Number.isFinite(this.form.optionLowStockThreshold)
+              ? Number(this.form.optionLowStockThreshold)
+              : 10,
           },
         ]
       : [];
@@ -129,6 +137,10 @@ export class AdminDashboardComponent {
         sellingPrice: Number(this.form.optionSellingPrice) || 0,
         marketPrice: Number(this.form.optionMarketPrice) || 0,
         sku: this.form.optionSku || undefined,
+        stock: Number.isFinite(this.form.optionStock) ? Number(this.form.optionStock) : 0,
+        lowStockThreshold: Number.isFinite(this.form.optionLowStockThreshold)
+          ? Number(this.form.optionLowStockThreshold)
+          : 10,
       },
     ];
     this.form.optionLabel = '';
@@ -138,6 +150,8 @@ export class AdminDashboardComponent {
     this.form.optionSellingPrice = 0;
     this.form.optionMarketPrice = 0;
     this.form.optionSku = '';
+    this.form.optionStock = 0;
+    this.form.optionLowStockThreshold = 10;
   }
 
   protected removeOption(index: number) {
@@ -160,6 +174,8 @@ export class AdminDashboardComponent {
       optionSellingPrice: 0,
       optionMarketPrice: 0,
       optionSku: '',
+      optionStock: 0,
+      optionLowStockThreshold: 10,
       options: product.options.map((opt) => ({
         label: opt.label,
         minQty: opt.minQty ?? 1,
@@ -168,6 +184,8 @@ export class AdminDashboardComponent {
         sellingPrice: opt.sellingPrice ?? 0,
         marketPrice: opt.marketPrice ?? 0,
         sku: opt.sku,
+        stock: opt.stock ?? 0,
+        lowStockThreshold: opt.lowStockThreshold ?? 10,
       })),
     };
     this.uploadedImageName = product.imageUrl ? 'Existing image' : null;
@@ -231,6 +249,8 @@ export class AdminDashboardComponent {
       optionSellingPrice: 0,
       optionMarketPrice: 0,
       optionSku: '',
+      optionStock: 0,
+      optionLowStockThreshold: 10,
       options: [],
     };
     this.uploadingImage = false;

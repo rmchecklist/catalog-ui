@@ -79,15 +79,22 @@
           <div class="price-line">
             @if (option.sellingPrice != null) {
             <span class="price">{{ option.sellingPrice | currency }}</span>
-            } @else { <span class="price muted">Price not set</span> }
-            @if (option.marketPrice != null && option.marketPrice > (option.sellingPrice ?? 0)) {
+            } @else { <span class="price muted">Price not set</span> } @if (option.marketPrice !=
+            null && option.marketPrice > (option.sellingPrice ?? 0)) {
             <span class="market">{{ option.marketPrice | currency }}</span>
-            }
-            @if (discountPercent(option) !== null) {
+            } @if (discountPercent(option) !== null) {
             <span class="discount">-{{ discountPercent(option) }}%</span>
             }
           </div>
-          }
+          {{ showStock() }}
+          @if (showStock() && option.stock != null) {
+          <div class="stock-line" [class.low]="isLowStock(option)">
+            <span class="stock-count">
+              @if (isLowStock(option)) { Low stock: {{ option.stock }} left } @else { In stock:
+              {{ option.stock }} }
+            </span>
+          </div>
+          } }
         </div>
         <button
           class="icon-btn add"

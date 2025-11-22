@@ -228,6 +228,16 @@ h1 {
   font-size: 0.85em;
 }
 
+.stock-line {
+  font-size: 0.9rem;
+  color: var(--muted-color);
+}
+
+.stock-line.low {
+  color: #b45309;
+  font-weight: 700;
+}
+
 .icon-btn.add {
   min-width: 2.6rem;
   min-height: 2.6rem;
@@ -241,6 +251,13 @@ h1 {
   justify-content: center;
   padding: 0.4rem;
   font-size: 1.05rem;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.icon-btn.add:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--primary-500) 28%, transparent);
 }
 
 .icon-btn.add .cart-icon {

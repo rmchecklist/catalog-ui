@@ -7,6 +7,8 @@ export interface ProductOption {
   purchasePrice?: number;
   sellingPrice?: number;
   marketPrice?: number;
+  stock?: number;
+  lowStockThreshold?: number;
 }
 
 export interface Product {

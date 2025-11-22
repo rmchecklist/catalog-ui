@@ -125,6 +125,23 @@
             </div>
           </label>
           <label class="field">
+            <span class="field-label">Stock</span>
+            <div class="input-shell">
+              <input type="number" name="optionStock" [(ngModel)]="form.optionStock" min="0" />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Low stock threshold</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionLowStockThreshold"
+                [(ngModel)]="form.optionLowStockThreshold"
+                min="0"
+              />
+            </div>
+          </label>
+          <label class="field">
             <span class="field-label">Selling price</span>
             <div class="input-shell">
               <input
@@ -173,11 +190,13 @@
         </div>
 
         @if (form.options.length) {
-        <div class="options-editor">
+          <div class="options-editor">
           <div class="options-head">
             <span>Label</span>
             <span>Weight</span>
             <span>Min qty</span>
+            <span>Stock</span>
+            <span>Low stock</span>
             <span>Selling</span>
             <span>Market</span>
             <span>Purchase</span>
@@ -204,6 +223,20 @@
               [ngModelOptions]="{ standalone: true }"
               [(ngModel)]="form.options[i].minQty"
               placeholder="1"
+            />
+            <input
+              type="number"
+              min="0"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].stock"
+              placeholder="0"
+            />
+            <input
+              type="number"
+              min="0"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].lowStockThreshold"
+              placeholder="10"
             />
             <input
               type="number"

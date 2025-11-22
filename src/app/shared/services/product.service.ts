@@ -24,6 +24,8 @@ export interface CreateProductRequest {
     sellingPrice?: number;
     marketPrice?: number;
     sku?: string;
+    stock?: number;
+    lowStockThreshold?: number;
   }>;
 }
 

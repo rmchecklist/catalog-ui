@@ -31,6 +31,7 @@ export class CatalogPageComponent {
     this.auth.user();
     return this.auth.hasAnyRole('ADMIN', 'CUSTOMER');
   });
+  protected readonly showStock = this.showPrices;
 
   constructor(
     private readonly productService: ProductService,
@@ -108,5 +109,11 @@ export class CatalogPageComponent {
     }
     const discount = ((option.marketPrice - option.sellingPrice) / option.marketPrice) * 100;
     return Math.round(discount);
+  }
+
+  protected isLowStock(option: ProductOption): boolean {
+    if (option.stock == null) return false;
+    const threshold = option.lowStockThreshold ?? 10;
+    return option.stock <= threshold;
   }
 }

@@ -14,9 +14,7 @@
       @if (data()?.pdfUrl) {
       <a class="btn ghost" [href]="data()?.pdfUrl" target="_blank" rel="noreferrer">Download PDF</a>
       } @else {
-      <a class="btn ghost" [href]="data()?.viewUrl || '/'" target="_blank" rel="noreferrer"
-        >Download PDF</a
-      >
+      <button class="btn ghost" type="button" disabled>PDF not available</button>
       }
     </div>
   </div>

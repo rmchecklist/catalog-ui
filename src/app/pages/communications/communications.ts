@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommunicationService, CommThread } from '../../shared/services/communication.service';
+import { NavService } from '../../shared/services/nav.service';
 
 @Component({
   selector: 'app-communications',
@@ -12,7 +13,8 @@ import { CommunicationService, CommThread } from '../../shared/services/communic
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommunicationsComponent implements OnInit {
-  private readonly service = new CommunicationService();
+  private readonly service = inject(CommunicationService);
+  protected readonly nav = inject(NavService);
   protected readonly threads = this.service.threads;
   protected readonly loading = this.service.loading;
 

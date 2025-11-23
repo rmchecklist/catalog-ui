@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../../shared/services/cart.service';
 import { CommunicationService } from '../../shared/services/communication.service';
 import { OrderService } from '../../shared/services/order.service';
 import { AuthService } from '../../shared/services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-quote-cart',
@@ -19,21 +21,26 @@ export class QuoteCartComponent {
   private readonly comms = inject(CommunicationService);
   private readonly orders = inject(OrderService);
   private readonly auth = inject(AuthService);
+  private readonly http = inject(HttpClient);
   protected readonly items = this.cart.items;
   protected submissionStatus: 'idle' | 'sent' = 'idle';
   protected submitting = false;
   protected error: string | null = null;
+  protected readonly isAdmin = signal(false);
+  protected readonly customers = signal<Array<{ code: string; name: string }>>([]);
 
   protected form = {
     name: '',
     email: '',
     phone: '',
     company: '',
-    instructions: ''
+    instructions: '',
+    customerCode: ''
   };
 
   constructor() {
     this.prefillFromAuth();
+    this.bootstrapAdmin();
   }
 
   private prefillFromAuth() {
@@ -44,6 +51,22 @@ export class QuoteCartComponent {
     this.form.name = (meta['name'] as string) ?? '';
     this.form.phone = (meta['phone'] as string) ?? '';
     this.form.company = (meta['company'] as string) ?? '';
+    this.form.customerCode = this.auth.getCustomerCode() ?? '';
+  }
+
+  private bootstrapAdmin() {
+    const admin = this.auth.hasAnyRole('ADMIN');
+    this.isAdmin.set(admin);
+    if (!admin) return;
+    this.http.get<Array<{ code: string; name: string }>>(`${environment.apiBaseUrl}/admin/customers`).subscribe({
+      next: (list) => {
+        this.customers.set(list);
+        if (list.length && !this.form.customerCode) {
+          this.form.customerCode = list[0].code;
+        }
+      },
+      error: (err) => console.error('Failed to load customers', err)
+    });
   }
 
   protected onQtyChange(id: string, minQty: number, available: boolean, value: number | null) {
@@ -76,6 +99,7 @@ export class QuoteCartComponent {
       name: this.form.name,
       phone: this.form.phone,
       company: this.form.company,
+      customerCode: this.form.customerCode,
       items
     };
 

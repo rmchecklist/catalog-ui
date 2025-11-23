@@ -1,20 +1,7 @@
-<div class="admin-layout" [class.nav-collapsed]="!nav.sidenavOpen()">
-  <aside class="sidenav" [class.collapsed]="!nav.sidenavOpen()">
-    <div class="sidenav-header">
-      <h3>Admin</h3>
-      <button class="icon-btn" type="button" (click)="nav.close()">←</button>
-    </div>
-    <nav class="sidenav-links">
-      <a routerLink="/admin" routerLinkActive="active">Product management</a>
-      <a routerLink="/admin/communications" routerLinkActive="active">Communication</a>
-    </nav>
-  </aside>
-
-  <div class="admin-card">
+<div class="admin-card">
     <div class="header">
       <div class="header-left">
         <div>
-          <p class="eyebrow">Admin</p>
           <h1>Product management</h1>
           <p class="lede">Manage catalog items and upload imagery stored in Supabase.</p>
         </div>

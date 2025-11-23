@@ -7,7 +7,6 @@ import { finalize } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Product } from '../../shared/models/product';
 import { CreateProductRequest, ProductService } from '../../shared/services/product.service';
-import { NavService } from '../../shared/services/nav.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -20,7 +19,6 @@ import { NavService } from '../../shared/services/nav.service';
 export class AdminDashboardComponent {
   private readonly productService = inject(ProductService);
   private readonly http = inject(HttpClient);
-  protected readonly nav = inject(NavService);
   protected readonly products = this.productService.products;
 
   protected form = {
@@ -271,9 +269,6 @@ export class AdminDashboardComponent {
     this.reset();
   }
 
-  protected toggleSidenav() {
-    this.nav.toggle();
-  }
 
   protected confirmDelete() {
     const pending = this.deletePending;

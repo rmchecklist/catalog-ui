@@ -1,0 +1,70 @@
+.invoice-view {
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: var(--elevated-shadow);
+  padding: 1.25rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--muted-color);
+  margin: 0 0 0.25rem 0;
+}
+
+.muted {
+  color: var(--muted-color);
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.label {
+  font-size: 0.9rem;
+  color: var(--muted-color);
+  margin: 0;
+}
+
+.value {
+  margin: 0;
+  font-weight: 600;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+th {
+  color: var(--muted-color);
+  font-weight: 700;
+}
+
+.status.error {
+  color: #b91c1c;
+  font-weight: 700;
+}

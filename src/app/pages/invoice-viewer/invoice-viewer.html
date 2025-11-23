@@ -1,0 +1,66 @@
+<div class="invoice-view">
+  @if (loading()) {
+  <p class="muted">Loading invoice…</p>
+  } @else if (!data()) {
+  <p class="status error">Invoice not found.</p>
+  } @else {
+  <div class="header">
+    <div>
+      <p class="eyebrow">Ilan Foods</p>
+      <h1>{{ type() === 'QUOTE' ? 'Quote' : 'Invoice' }} {{ data()?.invoiceNumber }}</h1>
+      <p class="muted">Customer: {{ data()?.customerCode }}</p>
+    </div>
+    <div class="links">
+      @if (data()?.pdfUrl) {
+      <a class="btn ghost" [href]="data()?.pdfUrl" target="_blank" rel="noreferrer">Download PDF</a>
+      } @else {
+      <a class="btn ghost" [href]="data()?.viewUrl || '/'" target="_blank" rel="noreferrer"
+        >Download PDF</a
+      >
+      }
+    </div>
+  </div>
+
+  <div class="meta-grid">
+    <div>
+      <p class="label">Status</p>
+      <p class="value">{{ data()?.status }}</p>
+    </div>
+    <div>
+      <p class="label">Created</p>
+      <p class="value">{{ data()?.createdAt | date : 'medium' }}</p>
+    </div>
+    <div>
+      <p class="label">Contact</p>
+      <p class="value">{{ data()?.name }} · {{ data()?.email }}</p>
+    </div>
+    <div>
+      <p class="label">Company</p>
+      <p class="value">{{ data()?.company }}</p>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>SKU</th>
+          <th>Product</th>
+          <th>Option</th>
+          <th>Qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of data()?.items ?? []; track item.productSlug + item.optionLabel) {
+        <tr>
+          <td>{{ item.sku }}</td>
+          <td>{{ item.productName }}</td>
+          <td>{{ item.optionLabel }}</td>
+          <td>{{ item.quantity }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>

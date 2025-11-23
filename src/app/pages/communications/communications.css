@@ -1,8 +1,10 @@
-.comm-layout {
+ .comm-layout {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   gap: 1rem;
 }
+
+/* Shell handles nav; only content layout here */
 
 .thread-list {
   background: var(--card-color);

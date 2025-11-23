@@ -1,0 +1,86 @@
+<div class="customers-card">
+  <div class="header">
+    <div>
+      <p class="eyebrow">Admin</p>
+      <h1>Customers</h1>
+      <p class="muted">Manage customer codes and contact info used for invoices.</p>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <label class="field">
+      <span class="field-label">Code</span>
+      <div class="input-shell">
+        <input type="text" [(ngModel)]="form.code" placeholder="e.g., BAL-PIN" />
+      </div>
+    </label>
+    <label class="field">
+      <span class="field-label">Name</span>
+      <div class="input-shell">
+        <input type="text" [(ngModel)]="form.name" placeholder="Customer name" />
+      </div>
+    </label>
+    <label class="field">
+      <span class="field-label">Email</span>
+      <div class="input-shell">
+        <input type="email" [(ngModel)]="form.email" placeholder="Email" />
+      </div>
+    </label>
+    <label class="field">
+      <span class="field-label">Phone</span>
+      <div class="input-shell">
+        <input type="text" [(ngModel)]="form.phone" placeholder="Phone" />
+      </div>
+    </label>
+    <label class="field">
+      <span class="field-label">Company</span>
+      <div class="input-shell">
+        <input type="text" [(ngModel)]="form.company" placeholder="Company" />
+      </div>
+    </label>
+    <label class="field">
+      <span class="field-label">Address</span>
+      <div class="input-shell">
+        <input type="text" [(ngModel)]="form.address" placeholder="Address" />
+      </div>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" type="button" (click)="save()">Save</button>
+    <button class="btn ghost" type="button" (click)="resetForm()">Clear</button>
+  </div>
+  @if (error) { <p class="status error">{{ error }}</p> }
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Company</th>
+          <th>Address</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of customers(); track c.code) {
+        <tr>
+          <td>{{ c.code }}</td>
+          <td>{{ c.name }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.phone }}</td>
+          <td>{{ c.company }}</td>
+          <td>{{ c.address }}</td>
+          <td class="actions">
+            <button class="link-btn" type="button" (click)="edit(c.code)">Edit</button>
+            <button class="link-btn danger" type="button" (click)="remove(c.code)">Delete</button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

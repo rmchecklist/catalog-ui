@@ -79,8 +79,8 @@
 
 .content-container {
   width: min(1440px, 100%);
-  /* padding: 0 1.25rem; */
   margin: 0 auto;
+  padding: 0 0.75rem;
 }
 
 .app-content ::ng-deep .mat-mdc-card {

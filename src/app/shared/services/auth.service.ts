@@ -83,6 +83,14 @@ export class AuthService {
     return current.some((r) => target.includes(r));
   }
 
+  getCustomerCode(): string | null {
+    const user = this.user();
+    const meta = (user?.user_metadata ?? {}) as Record<string, unknown>;
+    const appMeta = (user?.app_metadata ?? {}) as Record<string, unknown>;
+    const code = (meta['customerCode'] as string) || (appMeta['customerCode'] as string);
+    return code?.trim() || null;
+  }
+
   waitForSession(): Promise<boolean> {
     if (!this.loading()) {
       return Promise.resolve(!!this.session());

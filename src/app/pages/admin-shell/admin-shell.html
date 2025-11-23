@@ -1,0 +1,18 @@
+<div class="admin-layout" [class.nav-collapsed]="!nav.sidenavOpen()">
+  <aside class="sidenav" [class.collapsed]="!nav.sidenavOpen()">
+    <div class="sidenav-header">
+      <h3>Admin</h3>
+      <button class="icon-btn" type="button" (click)="nav.close()">←</button>
+    </div>
+    <nav class="sidenav-links">
+      <a routerLink="/admin/product-management" routerLinkActive="active">Product management</a>
+      <a routerLink="/admin/communications" routerLinkActive="active">Communication</a>
+      <a routerLink="/admin/invoices" routerLinkActive="active">Invoices</a>
+      <a routerLink="/admin/customers" routerLinkActive="active">Customers</a>
+    </nav>
+  </aside>
+
+  <div class="admin-card">
+    <router-outlet />
+  </div>
+</div>

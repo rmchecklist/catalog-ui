@@ -1,0 +1,107 @@
+.invoices-card {
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: var(--elevated-shadow);
+}
+
+/* Shell handles nav; only content layout here */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--muted-color);
+  margin: 0 0 0.25rem 0;
+}
+
+.muted {
+  color: var(--muted-color);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.65rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+th {
+  color: var(--muted-color);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary-500) 12%, var(--card-color));
+  color: var(--primary-600, var(--primary-500));
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.pill.quote {
+  background: color-mix(in srgb, #f59e0b 18%, var(--card-color));
+  color: #92400e;
+}
+
+.inv-num {
+  font-weight: 700;
+}
+
+.links a {
+  margin-right: 0.5rem;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.resend {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.resend input {
+  width: 160px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.95rem;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--primary-500);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.status.error {
+  color: #b91c1c;
+  font-weight: 700;
+}

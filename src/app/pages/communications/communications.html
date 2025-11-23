@@ -1,18 +1,19 @@
-<div class="comm-layout">
-  <aside class="thread-list">
-    <div class="list-header">
-      <div class="title">
-        <h2>Threads</h2>
-        <span class="badge">{{ threads().length }}</span>
-      </div>
-      <button class="icon-btn" type="button" (click)="refresh()">↻</button>
-    </div>
-    @if (loading()) {
-      <div class="placeholder">Loading threads…</div>
-    } @else if (!threads().length) {
-      <div class="placeholder muted">No threads yet.</div>
-    } @else {
-      @for (thread of threads(); track thread.id) {
+<div class="admin-layout">
+  <div class="admin-card">
+    <div class="comm-layout">
+      <aside class="thread-list">
+        <div class="list-header">
+          <div class="title">
+            <h2>Threads</h2>
+            <span class="badge">{{ threads().length }}</span>
+          </div>
+          <button class="icon-btn" type="button" (click)="refresh()">↻</button>
+        </div>
+        @if (loading()) {
+        <div class="placeholder">Loading threads…</div>
+        } @else if (!threads().length) {
+        <div class="placeholder muted">No threads yet.</div>
+        } @else { @for (thread of threads(); track thread.id) {
         <button
           type="button"
           class="thread-item"
@@ -21,7 +22,12 @@
         >
           <div class="thread-top">
             <span class="subject">{{ thread.subject }}</span>
-            <span class="status" [class.open]="thread.status === 'open'" [class.pending]="thread.status === 'pending'" [class.closed]="thread.status === 'closed'">
+            <span
+              class="status"
+              [class.open]="thread.status === 'open'"
+              [class.pending]="thread.status === 'pending'"
+              [class.closed]="thread.status === 'closed'"
+            >
               {{ thread.status | titlecase }}
             </span>
           </div>
@@ -30,43 +36,44 @@
             <span class="preview">{{ preview(thread) }}</span>
           </div>
         </button>
-      }
-    }
-  </aside>
+        } }
+      </aside>
 
-  <section class="thread-view">
-    @if (threadForDisplay(); as thread) {
-      <header class="thread-header">
-        <div>
-          <p class="eyebrow">Conversation</p>
-          <h2>{{ thread.subject }}</h2>
-          <div class="participants">With: {{ participants(thread).join(', ') }}</div>
-        </div>
-      </header>
-      <div class="messages">
-        @for (msg of thread.messages; track msg.id) {
+      <section class="thread-view">
+        @if (threadForDisplay(); as thread) {
+        <header class="thread-header">
+          <div>
+            <p class="eyebrow">Conversation</p>
+            <h2>{{ thread.subject }}</h2>
+            <div class="participants">With: {{ participants(thread).join(', ') }}</div>
+          </div>
+        </header>
+        <div class="messages">
+          @for (msg of thread.messages; track msg.id) {
           <div class="message" [class.outbound]="msg.direction === 'outbound'">
             <div class="meta">
               <span class="from">{{ msg.from }}</span>
-              <span class="time">{{ msg.createdAt | date:'short' }}</span>
+              <span class="time">{{ msg.createdAt | date : 'short' }}</span>
             </div>
             <div class="body">{{ msg.body }}</div>
           </div>
-        }
-      </div>
-      <div class="reply">
-        <label class="field">
-          <span>Reply</span>
-          <textarea rows="3" [(ngModel)]="replyBody" placeholder="Write your reply..."></textarea>
-        </label>
-        <div class="actions">
-          <button class="btn primary" type="button" (click)="sendReply()">Send</button>
+          }
         </div>
-      </div>
-    } @else {
-      <div class="empty-state">
-        <p>Select a thread to view the conversation.</p>
-      </div>
-    }
-  </section>
+        <div class="reply">
+          <label class="field">
+            <span>Reply</span>
+            <textarea rows="3" [(ngModel)]="replyBody" placeholder="Write your reply..."></textarea>
+          </label>
+          <div class="actions">
+            <button class="btn primary" type="button" (click)="sendReply()">Send</button>
+          </div>
+        </div>
+        } @else {
+        <div class="empty-state">
+          <p>Select a thread to view the conversation.</p>
+        </div>
+        }
+      </section>
+    </div>
+  </div>
 </div>

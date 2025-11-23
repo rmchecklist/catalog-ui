@@ -1,0 +1,69 @@
+<div class="admin-layout">
+  <div class="admin-card invoices-card">
+    <div class="header">
+      <div>
+        <h1>Invoices & Quotes</h1>
+        <p class="muted">Review all orders and quotes with quick access to view/download.</p>
+      </div>
+      <button class="btn ghost" type="button" (click)="load()" [disabled]="loading()">
+        Refresh
+      </button>
+    </div>
+
+    @if (loading()) {
+    <p class="muted">Loading...</p>
+    } @else if (!invoices().length) {
+    <p class="muted">No invoices yet.</p>
+    } @else {
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Created</th>
+            <th>Links</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (inv of invoices(); track inv.id) {
+          <tr>
+            <td>
+              <div class="inv-num">{{ inv.invoiceNumber }}</div>
+            </td>
+            <td>
+              <span class="pill" [class.quote]="inv.type === 'QUOTE'">{{ inv.type }}</span>
+            </td>
+            <td>{{ inv.status }}</td>
+            <td>{{ inv.customerCode }}</td>
+            <td>{{ inv.email }}</td>
+            <td>{{ inv.createdAt | date : 'short' }}</td>
+            <td class="links">
+              <a [href]="inv.viewUrl" target="_blank" rel="noreferrer">View</a>
+              @if (inv.pdfUrl) { <a [href]="inv.pdfUrl" target="_blank" rel="noreferrer">PDF</a> }
+            </td>
+            <td class="links">
+              <button class="link-btn" type="button" (click)="deleteInvoice(inv)">Delete</button>
+              <div class="resend">
+                <input
+                  type="email"
+                  placeholder="email"
+                  [(ngModel)]="sendEmail"
+                  [attr.aria-label]="'Send to email'"
+                />
+                <button class="btn ghost" type="button" (click)="resend(inv)">Send</button>
+              </div>
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+    @if (actionError) { <p class="status error">{{ actionError }}</p> }
+  </div>
+</div>

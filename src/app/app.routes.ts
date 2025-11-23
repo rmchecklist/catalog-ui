@@ -17,16 +17,36 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [authGuard],
-    loadComponent: () => import('./pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboardComponent)
-  },
-  {
-    path: 'admin/communications',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/communications/communications').then((m) => m.CommunicationsComponent)
+    loadComponent: () => import('./pages/admin-shell/admin-shell').then((m) => m.AdminShellComponent),
+    children: [
+      { path: '', redirectTo: 'product-management', pathMatch: 'full' },
+      {
+        path: 'product-management',
+        loadComponent: () =>
+          import('./pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboardComponent),
+      },
+      {
+        path: 'communications',
+        loadComponent: () =>
+          import('./pages/communications/communications').then((m) => m.CommunicationsComponent),
+      },
+      {
+        path: 'invoices',
+        loadComponent: () => import('./pages/invoices/invoices').then((m) => m.InvoicesPageComponent),
+      },
+      {
+        path: 'customers',
+        loadComponent: () => import('./pages/customers/customers').then((m) => m.CustomersComponent),
+      },
+    ],
   },
   {
     path: 'login',
     loadComponent: () => import('./pages/login/login').then((m) => m.LoginComponent)
+  },
+  {
+    path: 'invoice/:id',
+    loadComponent: () => import('./pages/invoice-viewer/invoice-viewer').then((m) => m.InvoiceViewerComponent)
   },
   { path: '**', redirectTo: '' }
 ];

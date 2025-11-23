@@ -48,6 +48,18 @@
           <input type="text" placeholder="Your name" [(ngModel)]="form.name" name="name" />
         </div>
       </label>
+      @if (isAdmin()) {
+      <label class="field">
+        <span class="field-label">Customer</span>
+        <div class="input-shell">
+          <select [(ngModel)]="form.customerCode" name="customerCode">
+            @for (c of customers(); track c.code) {
+            <option [value]="c.code">{{ c.code }} · {{ c.name }}</option>
+            }
+          </select>
+        </div>
+      </label>
+      }
       <label class="field">
         <span class="field-label">Email</span>
         <div class="input-shell">

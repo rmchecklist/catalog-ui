@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../shared/services/product.service';
 import { Product } from '../../shared/models/product';
 import { CartService } from '../../shared/services/cart.service';
+import { CartItem } from '../../shared/services/cart.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,6 +20,7 @@ export class ProductDetailComponent {
   protected readonly product = signal<Product | undefined>(undefined);
   // Tracks quantities selected per option label
   protected readonly quantities = signal<Record<string, number>>({});
+  protected readonly cartItems = () => this.cartService.items();
   protected readonly selectedCount = computed(() => {
     const p = this.product();
     if (!p) return 0;
@@ -81,19 +83,29 @@ export class ProductDetailComponent {
 
   protected addSelectedOptionsToCart() {
     const current = this.product();
-    if (!current) {
-      return;
-    }
+    if (!current) return;
     const map = this.quantities();
     const selections = current.options.filter((opt) => {
       const qty = map[opt.label] ?? 0;
       return qty > 0 && opt.available !== false;
     });
-
     for (const opt of selections) {
       const min = opt.minQty ?? 1;
       const qty = Math.max(map[opt.label] ?? min, min);
       this.cartService.addProductSelection(current, opt.label, qty).subscribe();
     }
+  }
+
+  protected addSingleOption(optLabel: string) {
+    const current = this.product();
+    if (!current) return;
+    const qty = this.quantities()[optLabel] ?? 1;
+    this.cartService.addProductSelection(current, optLabel, qty).subscribe();
+  }
+
+  protected isInCart(optLabel: string): boolean {
+    const p = this.product();
+    if (!p) return false;
+    return this.cartItems().some((item: CartItem) => item.slug === p.slug && item.option === optLabel);
   }
 }

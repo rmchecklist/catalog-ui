@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -17,9 +17,9 @@ import { AuthService } from '../../shared/services/auth.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CatalogPageComponent {
-  protected searchTerm = '';
-  protected selectedBrand = '';
-  protected selectedCategory = '';
+  protected readonly searchTerm = signal('');
+  protected readonly selectedBrand = signal('');
+  protected readonly selectedCategory = signal('');
 
   protected readonly products: Signal<Product[]>;
   protected readonly brands: Signal<string[]>;
@@ -43,9 +43,9 @@ export class CatalogPageComponent {
 
     effect(() => {
       this.productService.refresh({
-        search: this.searchTerm,
-        brand: this.selectedBrand,
-        category: this.selectedCategory
+        search: this.searchTerm(),
+        brand: this.selectedBrand(),
+        category: this.selectedCategory()
       });
     });
 

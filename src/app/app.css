@@ -42,18 +42,24 @@
 }
 
 .count-badge {
+  position: absolute;
+  top: -4px;
+  right: -13px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 22px;
-  height: 22px;
-  padding: 0 6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   background: linear-gradient(115deg, var(--primary-500), var(--primary-600));
   color: #ffffff;
-  margin-left: 0.35rem;
+}
+
+.icon-link {
+  position: relative;
 }
 
 .theme-toggle {

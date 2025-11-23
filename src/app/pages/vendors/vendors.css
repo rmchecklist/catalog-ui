@@ -1,4 +1,4 @@
-.customers-card {
+.vendors-card {
   background: var(--card-color);
   border: 1px solid var(--border-color);
   border-radius: 14px;
@@ -27,6 +27,72 @@
 
 .muted {
   color: var(--muted-color);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+}
+
+th {
+  color: var(--muted-color);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.actions .link-btn {
+  background: none;
+  border: none;
+  color: var(--primary-500);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+}
+
+.link-btn.danger {
+  color: #b91c1c;
+}
+
+.status.error {
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--card-color);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--elevated-shadow);
+  width: min(720px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
 }
 
 .form-grid {
@@ -74,70 +140,4 @@
   gap: 0.5rem;
   flex-wrap: wrap;
   margin-top: 0.5rem;
-}
-
-.table-wrapper {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 0.6rem;
-  border-bottom: 1px solid var(--border-color);
-  text-align: left;
-}
-
-th {
-  color: var(--muted-color);
-  font-weight: 700;
-  font-size: 0.95rem;
-}
-
-.link-btn {
-  background: none;
-  border: none;
-  color: var(--primary-500);
-  cursor: pointer;
-  padding: 0.2rem 0.4rem;
-}
-
-.link-btn.danger {
-  color: #b91c1c;
-}
-
-.status.error {
-  color: #b91c1c;
-  font-weight: 700;
-}
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal {
-  background: var(--card-color);
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--elevated-shadow);
-  width: min(720px, 94vw);
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 1.25rem;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
 }

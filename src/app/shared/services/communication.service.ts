@@ -16,6 +16,7 @@ export interface CommThread {
   id: string;
   subject: string;
   status: string;
+  type?: string;
   updatedAt: string;
   messages: CommMessage[];
 }
@@ -39,12 +40,12 @@ export class CommunicationService {
     return this.http.get<CommThread>(`${environment.apiBaseUrl}/communications/${id}`);
   }
 
-  createThread(subject: string, from: string, to: string, body: string) {
-    return this.http.post<CommThread>(`${environment.apiBaseUrl}/communications`, { subject, from, to, body });
+  createThread(subject: string, from: string, to: string, body: string, type?: string) {
+    return this.http.post<CommThread>(`${environment.apiBaseUrl}/communications`, { subject, from, to, body, type });
   }
 
-  sendReply(threadId: string, from: string, to: string, body: string) {
-    return this.http.post<CommThread>(`${environment.apiBaseUrl}/communications/${threadId}/reply`, { from, to, body });
+  sendReply(threadId: string, from: string, to: string, body: string, status?: string) {
+    return this.http.post<CommThread>(`${environment.apiBaseUrl}/communications/${threadId}/reply`, { from, to, body, status });
   }
 
   sendQuote(contact: { name: string; email: string; instructions: string }, items: Array<{ name: string; option: string; minQty: number; quantity: number; available: boolean }>) {
@@ -53,5 +54,9 @@ export class CommunicationService {
       items
     };
     return this.http.post<CommThread>(`${environment.apiBaseUrl}/communications/quote`, payload);
+  }
+
+  sendVendorEmail(subject: string, from: string, to: string, body: string) {
+    return this.http.post<CommThread>(`${environment.apiBaseUrl}/communications/vendor`, { subject, from, to, body });
   }
 }

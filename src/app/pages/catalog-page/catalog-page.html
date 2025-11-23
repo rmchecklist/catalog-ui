@@ -13,14 +13,23 @@
     <label class="field">
       <span class="field-label">Search</span>
       <div class="input-shell">
-        <input type="search" placeholder="Search products" [(ngModel)]="searchTerm" />
+        <input
+          type="search"
+          placeholder="Search products"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+        />
         <span class="suffix">🔍</span>
       </div>
     </label>
     <label class="field">
       <span class="field-label">Brand</span>
       <div class="input-shell">
-        <select [(ngModel)]="selectedBrand" [disabled]="loading()">
+        <select
+          [ngModel]="selectedBrand()"
+          (ngModelChange)="selectedBrand.set($event)"
+          [disabled]="loading()"
+        >
           <option value="">All brands</option>
           @if (brands().length) { @for (brand of brands(); track brand) {
           <option [value]="brand">{{ brand }}</option>
@@ -35,7 +44,11 @@
     <label class="field">
       <span class="field-label">Category</span>
       <div class="input-shell">
-        <select [(ngModel)]="selectedCategory" [disabled]="loading()">
+        <select
+          [ngModel]="selectedCategory()"
+          (ngModelChange)="selectedCategory.set($event)"
+          [disabled]="loading()"
+        >
           <option value="">All categories</option>
           @if (categories().length) { @for (category of categories(); track category) {
           <option [value]="category">{{ category }}</option>

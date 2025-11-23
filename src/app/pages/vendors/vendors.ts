@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
-interface Customer {
+interface Vendor {
   code: string;
   name: string;
   email?: string;
@@ -14,21 +14,21 @@ interface Customer {
 }
 
 @Component({
-  selector: 'app-customers',
+  selector: 'app-vendors',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './customers.html',
-  styleUrl: './customers.css',
+  templateUrl: './vendors.html',
+  styleUrl: './vendors.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomersComponent {
+export class VendorsComponent {
   private readonly http = inject(HttpClient);
-  protected readonly customers = signal<Customer[]>([]);
+  protected readonly vendors = signal<Vendor[]>([]);
   protected readonly loading = signal(false);
   protected error: string | null = null;
   protected showModal = false;
 
-  protected form: Customer = {
+  protected form: Vendor = {
     code: '',
     name: '',
     email: '',
@@ -43,11 +43,11 @@ export class CustomersComponent {
 
   protected load() {
     this.loading.set(true);
-    this.http.get<Customer[]>(`${environment.apiBaseUrl}/admin/customers`).subscribe({
-      next: (data) => this.customers.set(data),
+    this.http.get<Vendor[]>(`${environment.apiBaseUrl}/admin/vendors`).subscribe({
+      next: (data) => this.vendors.set(data),
       error: (err) => {
-        console.error('Failed to load customers', err);
-        this.error = 'Failed to load customers';
+        console.error('Failed to load vendors', err);
+        this.error = 'Failed to load vendors';
       },
       complete: () => this.loading.set(false),
     });
@@ -59,33 +59,33 @@ export class CustomersComponent {
       return;
     }
     this.error = null;
-    this.http.post<Customer>(`${environment.apiBaseUrl}/admin/customers`, this.form).subscribe({
+    this.http.post<Vendor>(`${environment.apiBaseUrl}/admin/vendors`, this.form).subscribe({
       next: (saved) => {
-        const updated = this.customers().filter((c) => c.code !== saved.code);
-        this.customers.set([...updated, saved]);
+        const updated = this.vendors().filter((v) => v.code !== saved.code);
+        this.vendors.set([...updated, saved]);
         this.resetForm();
         this.showModal = false;
       },
       error: (err) => {
-        console.error('Failed to save customer', err);
-        this.error = 'Failed to save customer';
+        console.error('Failed to save vendor', err);
+        this.error = 'Failed to save vendor';
       },
     });
   }
 
   protected edit(code: string) {
-    const c = this.customers().find((it) => it.code === code);
-    if (!c) return;
-    this.form = { ...c };
+    const v = this.vendors().find((it) => it.code === code);
+    if (!v) return;
+    this.form = { ...v };
     this.showModal = true;
   }
 
   protected remove(code: string) {
-    this.http.delete<void>(`${environment.apiBaseUrl}/admin/customers/${code}`).subscribe({
-      next: () => this.customers.set(this.customers().filter((c) => c.code !== code)),
+    this.http.delete<void>(`${environment.apiBaseUrl}/admin/vendors/${code}`).subscribe({
+      next: () => this.vendors.set(this.vendors().filter((v) => v.code !== code)),
       error: (err) => {
-        console.error('Failed to delete customer', err);
-        this.error = 'Failed to delete customer';
+        console.error('Failed to delete vendor', err);
+        this.error = 'Failed to delete vendor';
       },
     });
   }

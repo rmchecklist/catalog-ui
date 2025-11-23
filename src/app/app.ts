@@ -9,6 +9,7 @@ import { CartService } from './shared/services/cart.service';
 import { AuthService } from './shared/services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { NavService } from './shared/services/nav.service';
+import { BreadcrumbsComponent } from './shared/components/breadcrumbs';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ import { NavService } from './shared/services/nav.service';
     MatButtonModule,
     MatIconModule,
     MatBadgeModule,
-    MatMenuModule
+    MatMenuModule,
+    BreadcrumbsComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

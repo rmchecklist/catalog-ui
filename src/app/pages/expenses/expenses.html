@@ -1,0 +1,105 @@
+<div class="expenses-card">
+  <div class="header">
+    <div>
+      <h1>Expenses</h1>
+      <p class="muted">Track delivery, labor, vehicle, and other costs.</p>
+    </div>
+    <button class="btn primary" type="button" (click)="openModal()">Add expense</button>
+  </div>
+
+  @if (loading()) {
+  <p class="muted">Loading...</p>
+  } @else {
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Vendor</th>
+          <th>Receipt</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (e of expenses(); track e.id) {
+        <tr>
+          <td>{{ e.date | date : 'mediumDate' }}</td>
+          <td>{{ e.category }}</td>
+          <td>{{ e.description }}</td>
+          <td>{{ e.amount | currency : e.currency }}</td>
+          <td>{{ e.vendor }}</td>
+          <td>
+            @if (e.receiptUrl) {
+            <a [href]="e.receiptUrl" target="_blank" rel="noreferrer">Receipt</a>
+            } @else { — }
+          </td>
+          <td class="actions">
+            <button class="link-btn" type="button" (click)="openModal(e)">Edit</button>
+            <button class="link-btn danger" type="button" (click)="delete(e.id)">Delete</button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+
+  @if (showModal) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>{{ form.id ? 'Edit expense' : 'Add expense' }}</h2>
+        <button class="icon-btn" type="button" (click)="closeModal()">✕</button>
+      </div>
+      <div class="form-grid">
+        <label class="field">
+          <span class="field-label">Date</span>
+          <input type="date" [(ngModel)]="form.date" />
+        </label>
+        <label class="field">
+          <span class="field-label">Category</span>
+          <select [(ngModel)]="form.category">
+            <option value="">Select category</option>
+            @for (c of categories(); track c.code) {
+            <option [value]="c.code">{{ c.name }}</option>
+            }
+          </select>
+        </label>
+        <label class="field">
+          <span class="field-label">Amount</span>
+          <input type="number" [(ngModel)]="form.amount" step="0.01" />
+        </label>
+        <label class="field">
+          <span class="field-label">Currency</span>
+          <input type="text" [(ngModel)]="form.currency" />
+        </label>
+        <label class="field">
+          <span class="field-label">Vendor</span>
+          <input type="text" [(ngModel)]="form.vendor" />
+        </label>
+        <label class="field">
+          <span class="field-label">Receipt</span>
+          <input type="file" (change)="uploadReceipt($event)" [disabled]="uploading" />
+          @if (form.receiptUrl) { <small class="muted">Uploaded</small> }
+        </label>
+      </div>
+      <label class="field">
+        <span class="field-label">Description</span>
+        <textarea rows="2" [(ngModel)]="form.description"></textarea>
+      </label>
+      <label class="field">
+        <span class="field-label">Notes</span>
+        <textarea rows="2" [(ngModel)]="form.notes"></textarea>
+      </label>
+      <div class="actions">
+        <button class="btn primary" type="button" (click)="save()" [disabled]="uploading">Save</button>
+        <button class="btn ghost" type="button" (click)="closeModal()">Cancel</button>
+      </div>
+      @if (error) { <p class="status error">{{ error }}</p> }
+    </div>
+  </div>
+  }
+</div>

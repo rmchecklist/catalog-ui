@@ -30,12 +30,39 @@
   gap: 0.5rem;
 }
 
+.list-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .badge {
   background: color-mix(in srgb, var(--primary-500) 15%, var(--card-color));
   border: 1px solid var(--border-color);
   border-radius: 999px;
   padding: 0.2rem 0.6rem;
   font-weight: 700;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.filters select {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.35rem 0.5rem;
+  background: var(--card-color);
 }
 
 .placeholder {
@@ -188,11 +215,80 @@
 .actions {
   display: flex;
   justify-content: flex-end;
+  gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
 .empty-state {
   color: var(--muted-color);
+}
+
+.vendor-compose {
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--card-color);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--elevated-shadow);
+  width: min(720px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.form-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-right:1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--muted-color);
+}
+
+.field textarea,
+.field input,
+.field select {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  background: var(--card-color);
+}
+
+.status.error {
+  color: #b91c1c;
+  font-weight: 700;
 }
 
 @media (max-width: 960px) {

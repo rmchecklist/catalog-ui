@@ -1,17 +1,17 @@
 <mat-toolbar color="primary" class="app-toolbar" role="navigation">
   @if (showAdminNav()) {
-    <button
-      mat-icon-button
-      type="button"
-      class="nav-toggle"
-      aria-label="Toggle menu"
-      (click)="toggleNav()"
-    >
-      <mat-icon>menu</mat-icon>
-    </button>
+  <button
+    mat-icon-button
+    type="button"
+    class="nav-toggle"
+    aria-label="Toggle menu"
+    (click)="toggleNav()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
   }
   <a class="brand-logo" routerLink="/">
-    <img src="assets/ilan-logo.svg" alt="Ilan Foods" />
+    <img src="assets/ilan-logo.svg" alt="ILAN Foods" />
   </a>
   <span class="spacer"></span>
   <a
@@ -21,21 +21,36 @@
     [routerLinkActiveOptions]="{ exact: true }"
     >Catalog</a
   >
-  <a mat-button routerLink="/quote" routerLinkActive="active-link">
-    Quote Cart @if (quoteCount() > 0) {
-    <span class="count-badge">{{ quoteCount() }}</span>
-    }
+  <a
+    mat-icon-button
+    routerLink="/quote"
+    routerLinkActive="active-link"
+    class="icon-link"
+    aria-label="Quote cart"
+  >
+    <mat-icon>shopping_cart</mat-icon>
+    @if (quoteCount() > 0) { <span class="count-badge">{{ quoteCount() }}</span> }
   </a>
   @if (user()) {
-    <a mat-button routerLink="/admin" routerLinkActive="active-link">Admin</a>
-  }
-  @if (user()) {
-  <button mat-button class="user-menu-trigger" [matMenuTriggerFor]="userMenu">
-    <span class="user-label">{{ user()?.email }}</span>
-    <mat-icon class="user-caret" iconPositionEnd>expand_more</mat-icon>
+  <a mat-button routerLink="/admin" routerLinkActive="active-link">Admin</a>
+  } @if (user()) {
+  <button
+    mat-icon-button
+    class="user-menu-trigger"
+    [matMenuTriggerFor]="userMenu"
+    aria-label="User menu"
+  >
+    <mat-icon>account_circle</mat-icon>
   </button>
   <mat-menu #userMenu="matMenu">
-    <button mat-menu-item (click)="logout()">Logout</button>
+    <button mat-menu-item disabled>
+      <mat-icon>person</mat-icon>
+      <span>{{ user()?.email }}</span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
   </mat-menu>
   } @else {
   <a mat-button routerLink="/login" routerLinkActive="active-link">Login</a>
@@ -53,6 +68,7 @@
 
 <main class="app-content">
   <div class="content-container">
+    <app-breadcrumbs />
     <router-outlet></router-outlet>
   </div>
 </main>
@@ -62,7 +78,7 @@
   <div class="footer-links">
     <a routerLink="/">Home</a>
     @if (user()) {
-      <a routerLink="/admin">Admin</a>
+    <a routerLink="/admin">Admin</a>
     }
   </div>
 </footer>

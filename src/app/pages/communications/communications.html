@@ -7,13 +7,36 @@
             <h2>Threads</h2>
             <span class="badge">{{ threads().length }}</span>
           </div>
-          <button class="icon-btn" type="button" (click)="refresh()">↻</button>
+          <div class="list-actions">
+            <button class="btn ghost" type="button" (click)="openCompose()">Send email</button>
+            <button class="icon-btn" type="button" (click)="refresh()">↻</button>
+          </div>
+        </div>
+        <div class="filters">
+          <label>
+            <span class="muted">Type</span>
+            <select [(ngModel)]="typeFilter">
+              <option value="ALL">All</option>
+              <option value="CUSTOMER">Customer</option>
+              <option value="VENDOR">Vendor</option>
+            </select>
+          </label>
+          <label>
+            <span class="muted">Status</span>
+            <select [(ngModel)]="statusFilter">
+              <option value="ALL">All</option>
+              <option value="OPEN">Open</option>
+              <option value="PENDING">Pending</option>
+              <option value="RESPONDED">Responded</option>
+              <option value="CLOSED">Closed</option>
+            </select>
+          </label>
         </div>
         @if (loading()) {
         <div class="placeholder">Loading threads…</div>
         } @else if (!threads().length) {
         <div class="placeholder muted">No threads yet.</div>
-        } @else { @for (thread of threads(); track thread.id) {
+        } @else { @for (thread of filteredThreads(); track thread.id) {
         <button
           type="button"
           class="thread-item"
@@ -77,3 +100,34 @@
     </div>
   </div>
 </div>
+
+@if (showCompose) {
+<div class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Send email</h3>
+      <button class="icon-btn" type="button" (click)="closeCompose()">✕</button>
+    </div>
+    <div class="form-flex">
+      <label class="field">
+        <span class="muted">To</span>
+        <input type="email" [(ngModel)]="compose.to" placeholder="recipient@example.com" />
+      </label>
+      <label class="field">
+        <span class="muted">Subject</span>
+        <input type="text" [(ngModel)]="compose.subject" placeholder="Subject" />
+      </label>
+       <label class="field">
+      <span class="muted">Message</span>
+      <textarea rows="4" [(ngModel)]="compose.body" placeholder="Write your email..."></textarea>
+    </label>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="button" (click)="sendVendor()">Send</button>
+      <button class="btn ghost" type="button" (click)="closeCompose()">Cancel</button>
+    </div>
+    @if (composeError) { <p class="status error">{{ composeError }}</p> }
+  </div>
+</div>
+}

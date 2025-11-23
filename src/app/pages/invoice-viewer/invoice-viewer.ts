@@ -70,7 +70,7 @@ export class InvoiceViewerComponent {
     return {
       ...res,
       viewUrl: res.viewUrl || selfView,
-      pdfUrl: res.pdfUrl || null,
+      pdfUrl: res.pdfUrl || undefined,
     };
   }
 }

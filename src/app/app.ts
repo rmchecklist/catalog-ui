@@ -10,12 +10,15 @@ import { AuthService } from './shared/services/auth.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { NavService } from './shared/services/nav.service';
 import { BreadcrumbsComponent } from './shared/components/breadcrumbs';
+import { FormsModule } from '@angular/forms';
+import { SearchService, ProductSuggestion } from './shared/services/search.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
@@ -34,10 +37,15 @@ export class App {
   protected readonly nav = inject(NavService);
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly search = inject(SearchService);
   protected readonly theme = signal<'light' | 'dark'>('light');
   protected readonly quoteCount = this.cart.totalCount;
   protected readonly user = this.auth.user;
   protected readonly showAdminNav = signal(false);
+  protected readonly searchTerm = signal('');
+  protected readonly suggestions = signal<ProductSuggestion[]>([]);
+  protected showSuggestions = signal(false);
+  private searchTimer: any;
 
   constructor() {
     effect(() => {
@@ -63,5 +71,36 @@ export class App {
 
   protected toggleNav() {
     this.nav.toggle();
+  }
+
+  protected onSearchInput(value: string) {
+    this.searchTerm.set(value);
+    if (!value || !value.trim()) {
+      this.suggestions.set([]);
+      this.showSuggestions.set(false);
+      return;
+    }
+    if (this.searchTimer) {
+      clearTimeout(this.searchTimer);
+    }
+    this.searchTimer = setTimeout(() => {
+      this.search.suggest(value.trim()).subscribe((res) => {
+        this.suggestions.set(res);
+        this.showSuggestions.set(res.length > 0);
+      });
+    }, 200);
+  }
+
+  protected submitSearch(term?: string) {
+    const value = term ?? this.searchTerm().trim();
+    if (!value) return;
+    this.showSuggestions.set(false);
+    this.router.navigate(['/'], { queryParams: { search: value } });
+  }
+
+  protected goToSuggestion(s: ProductSuggestion) {
+    this.showSuggestions.set(false);
+    this.searchTerm.set('');
+    this.router.navigate(['/products', s.slug]);
   }
 }

@@ -13,6 +13,32 @@
   <a class="brand-logo" routerLink="/">
     <img src="assets/ilan-logo.svg" alt="ILAN Foods" />
   </a>
+  <div class="global-search">
+    <div class="search-shell">
+      <mat-icon>search</mat-icon>
+      <input
+        type="search"
+        placeholder="Search products, brands, categories"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="onSearchInput($event)"
+        (keyup.enter)="submitSearch()"
+      />
+      <button mat-icon-button type="button" aria-label="Submit search" (click)="submitSearch()">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    @if (showSuggestions()) {
+    <div class="search-dropdown">
+      @for (s of suggestions(); track s.slug) {
+      <button type="button" class="search-item" (click)="goToSuggestion(s)">
+        <div class="title">{{ s.name }}</div>
+        <div class="meta">{{ s.brand }} · {{ s.category }}</div>
+      </button>
+      }
+      @if (!suggestions().length) { <div class="search-empty">No matches</div> }
+    </div>
+    }
+  </div>
   <span class="spacer"></span>
   <a
     mat-button

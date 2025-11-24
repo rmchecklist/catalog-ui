@@ -20,6 +20,8 @@ export class CatalogPageComponent {
   protected readonly searchTerm = signal('');
   protected readonly selectedBrand = signal('');
   protected readonly selectedCategory = signal('');
+  protected readonly page = signal(0);
+  protected readonly pageSize = signal(12);
 
   protected readonly products: Signal<Product[]>;
   protected readonly brands: Signal<string[]>;
@@ -32,6 +34,8 @@ export class CatalogPageComponent {
     return this.auth.hasAnyRole('ADMIN', 'CUSTOMER');
   });
   protected readonly showStock = this.showPrices;
+  protected readonly total: Signal<number>;
+  protected readonly totalPages: Signal<number>;
 
   constructor(
     private readonly productService: ProductService,
@@ -40,12 +44,18 @@ export class CatalogPageComponent {
   ) {
     this.products = productService.products;
     this.loading = productService.loading;
+    this.total = productService.total;
+    this.totalPages = computed(() =>
+      Math.max(1, Math.ceil((this.total() || 0) / this.pageSize()))
+    );
 
     effect(() => {
       this.productService.refresh({
         search: this.searchTerm(),
         brand: this.selectedBrand(),
-        category: this.selectedCategory()
+        category: this.selectedCategory(),
+        page: this.page(),
+        size: this.pageSize()
       });
     });
 
@@ -83,6 +93,24 @@ export class CatalogPageComponent {
     //   this.selectedOptions.set(current);
     // });
     this.cartItems = this.cartService.items;
+  }
+
+  protected nextPage() {
+    if (this.page() < this.totalPages() - 1) {
+      this.page.update((p) => p + 1);
+    }
+  }
+
+  protected prevPage() {
+    if (this.page() > 0) {
+      this.page.update((p) => p - 1);
+    }
+  }
+
+  protected goToPage(page: number) {
+    if (page >= 0 && page < this.totalPages()) {
+      this.page.set(page);
+    }
   }
 
   protected addOptionToQuote(product: Product, option: ProductOption) {

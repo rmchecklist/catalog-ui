@@ -7,6 +7,14 @@ import { AuthService } from './auth.service';
 import { HttpParams } from '@angular/common/http';
 
 const API_BASE = `${environment.apiBaseUrl}/products`;
+const API_PAGE = `${API_BASE}/page`;
+
+export interface ProductPage {
+  items: Product[];
+  total: number;
+  page: number;
+  size: number;
+}
 
 export interface CreateProductRequest {
   name: string;
@@ -33,30 +41,39 @@ export interface CreateProductRequest {
 export class ProductService {
   private readonly productsSignal = signal<Product[]>([]);
   readonly products: Signal<Product[]> = this.productsSignal.asReadonly();
+  private readonly totalSignal = signal(0);
+  readonly total = this.totalSignal.asReadonly();
+  private readonly pageSignal = signal(0);
+  readonly page = this.pageSignal.asReadonly();
+  private readonly sizeSignal = signal(12);
+  readonly size = this.sizeSignal.asReadonly();
   readonly loading = signal(false);
 
   constructor(private readonly http: HttpClient, private readonly auth: AuthService) {
     this.refresh();
   }
 
-  refresh(filters?: { search?: string; brand?: string; category?: string }) {
+  refresh(filters?: { search?: string; brand?: string; category?: string; page?: number; size?: number }) {
     this.loading.set(true);
     let params = new HttpParams();
-    if (filters?.search) {
-      params = params.set('search', filters.search);
-    }
-    if (filters?.brand) {
-      params = params.set('brand', filters.brand);
-    }
-    if (filters?.category) {
-      params = params.set('category', filters.category);
-    }
+    const page = filters?.page ?? this.pageSignal();
+    const size = filters?.size ?? this.sizeSignal();
+    if (filters?.search) params = params.set('search', filters.search);
+    if (filters?.brand) params = params.set('brand', filters.brand);
+    if (filters?.category) params = params.set('category', filters.category);
+    params = params.set('page', page);
+    params = params.set('size', size);
     const token = this.auth.getAccessToken();
     const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined;
     this.http
-      .get<Product[]>(API_BASE, { params, headers })
+      .get<ProductPage>(API_PAGE, { params, headers })
       .pipe(
-        tap((products) => this.productsSignal.set(products)),
+        tap((res) => {
+          this.productsSignal.set(res.items);
+          this.totalSignal.set(res.total);
+          this.pageSignal.set(res.page);
+          this.sizeSignal.set(res.size);
+        }),
         catchError((err) => {
           console.error('Failed to load products', err);
           return of([] as Product[]);

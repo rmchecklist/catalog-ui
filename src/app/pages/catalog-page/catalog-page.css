@@ -105,6 +105,13 @@ h1 {
   justify-content: flex-start;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
 .product-card {
   background: var(--card-color);
   box-shadow: var(--elevated-shadow);

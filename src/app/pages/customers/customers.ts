@@ -57,6 +57,7 @@ export class CustomersComponent {
   protected showModal = false;
   protected confirmDelete: string | null = null;
   protected shipSameAsBilling = false;
+  protected activeTab: 'billing' | 'shipping' | 'contacts' = 'billing';
 
   protected form: Customer = {
     code: '',
@@ -120,6 +121,7 @@ export class CustomersComponent {
       contacts: [...(c.contacts ?? [])],
     };
     this.shipSameAsBilling = false;
+    this.activeTab = 'billing';
     this.showModal = true;
   }
 
@@ -143,6 +145,7 @@ export class CustomersComponent {
       contacts: [],
     };
     this.shipSameAsBilling = false;
+    this.activeTab = 'billing';
   }
 
   protected openModal() {
@@ -215,5 +218,9 @@ export class CustomersComponent {
       return;
     }
     (this.form as any)[field] = `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
+
+  protected switchTab(tab: 'billing' | 'shipping' | 'contacts') {
+    this.activeTab = tab;
   }
 }

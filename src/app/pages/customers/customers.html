@@ -38,7 +38,7 @@
             }
           </td>
           <td>{{ c.company }}</td>
-          <td>{{ c.billingAddress?.city }}</td>
+          <td>{{ c.billingAddress.city }}</td>
           <td class="actions">
             <button class="link-btn" type="button" (click)="edit(c.code)">Edit</button>
             <button class="link-btn danger" type="button" (click)="remove(c.code)">Delete</button>
@@ -126,6 +126,19 @@
         </label>
       </div>
 
+      <div class="tab-bar">
+        <button class="tab" type="button" [class.active]="activeTab === 'billing'" (click)="switchTab('billing')">
+          Billing address
+        </button>
+        <button class="tab" type="button" [class.active]="activeTab === 'shipping'" (click)="switchTab('shipping')">
+          Shipping address
+        </button>
+        <button class="tab" type="button" [class.active]="activeTab === 'contacts'" (click)="switchTab('contacts')">
+          Contact persons
+        </button>
+      </div>
+
+      @if (activeTab === 'billing') {
       <div class="address-section">
         <h3>Billing address</h3>
         <div class="form-grid">
@@ -171,7 +184,9 @@
           </label>
         </div>
         </div>
+      }
 
+      @if (activeTab === 'shipping') {
       <div class="address-section">
         <label class="flex-row">
           <input type="checkbox" [checked]="shipSameAsBilling" (change)="toggleShipSameAsBilling($event.target.checked)" />
@@ -220,7 +235,9 @@
           </label>
         </div>
       </div>
+      }
 
+      @if (activeTab === 'contacts') {
       <div class="contacts-section">
         <div class="section-header">
           <h3>Contact persons</h3>
@@ -228,6 +245,14 @@
         </div>
         @if (form.contacts?.length) {
         <div class="contacts-list">
+          <div class="contact-row headers">
+            <span class="muted">First name</span>
+            <span class="muted">Last name</span>
+            <span class="muted">Email</span>
+            <span class="muted">Work phone</span>
+            <span class="muted">Mobile</span>
+            <span></span>
+          </div>
           @for (c of form.contacts; let i = $index; track i) {
           <div class="contact-row">
             <input type="text" placeholder="First name" [(ngModel)]="c.firstName" />
@@ -243,6 +268,7 @@
         <p class="muted">No contacts added yet.</p>
         }
       </div>
+      }
 
       <div class="actions">
         <button class="btn primary" type="button" (click)="save()">Save</button>

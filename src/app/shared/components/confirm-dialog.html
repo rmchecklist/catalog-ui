@@ -1,0 +1,11 @@
+<div class="confirm-modal">
+  <div class="modal-header">
+    <h3>{{ title }}</h3>
+    <button class="icon-btn" type="button" (click)="cancel.emit()">✕</button>
+  </div>
+  <p class="message">{{ message }}</p>
+  <div class="actions">
+    <button class="btn danger" type="button" (click)="confirm.emit()">{{ confirmLabel }}</button>
+    <button class="btn ghost" type="button" (click)="cancel.emit()">{{ cancelLabel }}</button>
+  </div>
+</div>

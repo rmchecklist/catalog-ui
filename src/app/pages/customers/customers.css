@@ -31,8 +31,8 @@
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
 }
 
 .field {
@@ -60,13 +60,25 @@
 }
 
 .input-shell input {
-  width: 100%;
+  /* width: 100%; */
   border: none;
   background: transparent;
   font-size: 1rem;
   color: var(--text-color);
   outline: none;
   font-family: inherit;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  height:35px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--card-color);
+  font: inherit;
+  color: var(--text-color);
 }
 
 .actions {
@@ -129,7 +141,7 @@ th {
   border-radius: 16px;
   border: 1px solid var(--border-color);
   box-shadow: var(--elevated-shadow);
-  width: min(720px, 94vw);
+  width: min(1024px, 94vw);
   max-height: 90vh;
   overflow-y: auto;
   padding: 1.25rem;
@@ -140,4 +152,63 @@ th {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.75rem;
+}
+
+.address-section,
+.contacts-section {
+  margin-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 0.9rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.contacts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.35rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--surface-1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.contact-row input {
+  width: 100%;
+  height:35px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font: inherit;
+  background: var(--card-color);
+}
+
+.contact-row .icon-btn {
+  justify-self: end;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #b91c1c;
+}
+
+.btn.small {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.9rem;
+}
+
+.flex-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }

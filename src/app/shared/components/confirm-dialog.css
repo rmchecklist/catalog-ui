@@ -1,0 +1,24 @@
+.confirm-modal {
+  background: var(--card-color);
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--elevated-shadow);
+  width: min(420px, 92vw);
+  padding: 1rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.message {
+  margin: 0 0 1rem 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}

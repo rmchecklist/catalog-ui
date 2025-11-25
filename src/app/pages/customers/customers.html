@@ -12,11 +12,13 @@
       <thead>
         <tr>
           <th>Code</th>
-          <th>Name</th>
+          <th>Display name</th>
+          <th>Type</th>
+          <th>Primary contact</th>
           <th>Email</th>
-          <th>Phone</th>
+          <th>Phones</th>
           <th>Company</th>
-          <th>Address</th>
+          <th>Billing city</th>
           <th></th>
         </tr>
       </thead>
@@ -24,11 +26,19 @@
         @for (c of customers(); track c.code) {
         <tr>
           <td>{{ c.code }}</td>
-          <td>{{ c.name }}</td>
+          <td>{{ c.displayName }}</td>
+          <td>{{ c.type }}</td>
+          <td>{{ c.primaryFirstName }} {{ c.primaryLastName }}</td>
           <td>{{ c.email }}</td>
-          <td>{{ c.phone }}</td>
+          <td>
+            @if (c.phoneWork) {
+            <div>Work: {{ c.phoneWork }}</div>
+            } @if (c.phoneMobile) {
+            <div>Mobile: {{ c.phoneMobile }}</div>
+            }
+          </td>
           <td>{{ c.company }}</td>
-          <td>{{ c.address }}</td>
+          <td>{{ c.billingAddress?.city }}</td>
           <td class="actions">
             <button class="link-btn" type="button" (click)="edit(c.code)">Edit</button>
             <button class="link-btn danger" type="button" (click)="remove(c.code)">Delete</button>
@@ -49,47 +59,210 @@
       <div class="form-grid">
         <label class="field">
           <span class="field-label">Code</span>
-          <div class="input-shell">
+          <div>
             <input type="text" [(ngModel)]="form.code" placeholder="e.g., BAL-PIN" />
           </div>
         </label>
         <label class="field">
-          <span class="field-label">Name</span>
-          <div class="input-shell">
-            <input type="text" [(ngModel)]="form.name" placeholder="Customer name" />
+          <span class="field-label">Customer type</span>
+          <div>
+            <select [(ngModel)]="form.type">
+              <option value="BUSINESS">Business</option>
+              <option value="INDIVIDUAL">Individual</option>
+            </select>
           </div>
         </label>
         <label class="field">
-          <span class="field-label">Email</span>
-          <div class="input-shell">
-            <input type="email" [(ngModel)]="form.email" placeholder="Email" />
-          </div>
-        </label>
-        <label class="field">
-          <span class="field-label">Phone</span>
-          <div class="input-shell">
-            <input type="text" [(ngModel)]="form.phone" placeholder="Phone" />
+          <span class="field-label">Display name</span>
+          <div>
+            <input type="text" [(ngModel)]="form.displayName" placeholder="Display name" />
           </div>
         </label>
         <label class="field">
           <span class="field-label">Company</span>
-          <div class="input-shell">
+          <div>
             <input type="text" [(ngModel)]="form.company" placeholder="Company" />
           </div>
         </label>
         <label class="field">
-          <span class="field-label">Address</span>
-          <div class="input-shell">
-            <input type="text" [(ngModel)]="form.address" placeholder="Address" />
+          <span class="field-label">Primary first name</span>
+          <div>
+            <input type="text" [(ngModel)]="form.primaryFirstName" placeholder="First name" />
           </div>
         </label>
+        <label class="field">
+          <span class="field-label">Primary last name</span>
+          <div>
+            <input type="text" [(ngModel)]="form.primaryLastName" placeholder="Last name" />
+          </div>
+        </label>
+        <label class="field">
+          <span class="field-label">Email address</span>
+          <div>
+            <input type="email" [(ngModel)]="form.email" placeholder="Email" />
+          </div>
+        </label>
+        <label class="field">
+          <span class="field-label">Work phone</span>
+          <input
+            type="tel"
+            inputmode="tel"
+            maxlength="14"
+            placeholder="(777) 888-9999"
+            [(ngModel)]="form.phoneWork"
+            (blur)="formatPhone('phoneWork')"
+          />
+        </label>
+        <label class="field">
+          <span class="field-label">Mobile phone</span>
+          <input
+            type="tel"
+            inputmode="tel"
+            maxlength="14"
+            placeholder="(777) 888-9999"
+            [(ngModel)]="form.phoneMobile"
+            (blur)="formatPhone('phoneMobile')"
+          />
+        </label>
       </div>
+
+      <div class="address-section">
+        <h3>Billing address</h3>
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label">Attention</span>
+            <input type="text" [(ngModel)]="form.billingAddress.attention" (ngModelChange)="syncShippingIfLinked()" />
+          </label>
+          <label class="field">
+            <span class="field-label">Address 1</span>
+            <input type="text" [(ngModel)]="form.billingAddress.address1" (ngModelChange)="syncShippingIfLinked()" />
+          </label>
+          <label class="field">
+            <span class="field-label">Address 2</span>
+            <input type="text" [(ngModel)]="form.billingAddress.address2" (ngModelChange)="syncShippingIfLinked()" />
+          </label>
+          <label class="field">
+            <span class="field-label">City</span>
+            <input type="text" [(ngModel)]="form.billingAddress.city" (ngModelChange)="syncShippingIfLinked()" />
+          </label>
+          <label class="field">
+            <span class="field-label">State</span>
+            <select [(ngModel)]="form.billingAddress.state" (ngModelChange)="syncShippingIfLinked()">
+              <option value="">Select state</option>
+              @for (s of states; track s.code) {
+              <option [value]="s.code">{{ s.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">Zip</span>
+            <input type="text" [(ngModel)]="form.billingAddress.zip" (ngModelChange)="syncShippingIfLinked()" />
+          </label>
+          <label class="field">
+            <span class="field-label">Phone</span>
+            <input
+              type="tel"
+              inputmode="tel"
+              maxlength="14"
+              placeholder="(777) 888-9999"
+              [(ngModel)]="form.billingAddress.phone"
+              (ngModelChange)="syncShippingIfLinked()"
+            />
+          </label>
+        </div>
+        </div>
+
+      <div class="address-section">
+        <label class="flex-row">
+          <input type="checkbox" [checked]="shipSameAsBilling" (change)="toggleShipSameAsBilling($event.target.checked)" />
+          <span>Shipping address is the same as billing</span>
+        </label>
+        <h3>Shipping address</h3>
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label">Attention</span>
+            <input type="text" [(ngModel)]="form.shippingAddress.attention" />
+          </label>
+          <label class="field">
+            <span class="field-label">Address 1</span>
+            <input type="text" [(ngModel)]="form.shippingAddress.address1" />
+          </label>
+          <label class="field">
+            <span class="field-label">Address 2</span>
+            <input type="text" [(ngModel)]="form.shippingAddress.address2" />
+          </label>
+          <label class="field">
+            <span class="field-label">City</span>
+            <input type="text" [(ngModel)]="form.shippingAddress.city" />
+          </label>
+          <label class="field">
+            <span class="field-label">State</span>
+            <select [(ngModel)]="form.shippingAddress.state">
+              <option value="">Select state</option>
+              @for (s of states; track s.code) {
+              <option [value]="s.code">{{ s.name }}</option>
+              }
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">Zip</span>
+            <input type="text" [(ngModel)]="form.shippingAddress.zip" />
+          </label>
+          <label class="field">
+            <span class="field-label">Phone</span>
+            <input
+              type="tel"
+              inputmode="tel"
+              maxlength="14"
+              placeholder="(777) 888-9999"
+              [(ngModel)]="form.shippingAddress.phone"
+            />
+          </label>
+        </div>
+      </div>
+
+      <div class="contacts-section">
+        <div class="section-header">
+          <h3>Contact persons</h3>
+          <button class="btn small" type="button" (click)="addContact()">Add contact</button>
+        </div>
+        @if (form.contacts?.length) {
+        <div class="contacts-list">
+          @for (c of form.contacts; let i = $index; track i) {
+          <div class="contact-row">
+            <input type="text" placeholder="First name" [(ngModel)]="c.firstName" />
+            <input type="text" placeholder="Last name" [(ngModel)]="c.lastName" />
+            <input type="email" placeholder="Email" [(ngModel)]="c.email" />
+            <input type="text" placeholder="Work phone" [(ngModel)]="c.workPhone" />
+            <input type="text" placeholder="Mobile" [(ngModel)]="c.mobilePhone" />
+            <button class="icon-btn" type="button" (click)="removeContact(i)">✕</button>
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="muted">No contacts added yet.</p>
+        }
+      </div>
+
       <div class="actions">
         <button class="btn primary" type="button" (click)="save()">Save</button>
         <button class="btn ghost" type="button" (click)="closeModal()">Cancel</button>
       </div>
-      @if (error) { <p class="status error">{{ error }}</p> }
+      @if (error) {
+      <p class="status error">{{ error }}</p>
+      }
     </div>
+  </div>
+  } @if (confirmDelete) {
+  <div class="modal-backdrop">
+    <app-confirm-dialog
+      title="Delete customer"
+      message="Are you sure you want to delete this customer?"
+      confirmLabel="Delete"
+      cancelLabel="Cancel"
+      (confirm)="confirmDeleteOk()"
+      (cancel)="cancelDelete()"
+    />
   </div>
   }
 </div>

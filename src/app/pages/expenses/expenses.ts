@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog';
 
 interface Expense {
   id?: string;
@@ -24,7 +25,7 @@ interface Category {
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmDialogComponent],
   templateUrl: './expenses.html',
   styleUrl: './expenses.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,6 +48,7 @@ export class ExpensesComponent {
     notes: '',
   };
   protected uploading = false;
+  protected confirmDelete: string | null = null;
 
   ngOnInit() {
     this.load();
@@ -110,13 +112,7 @@ export class ExpensesComponent {
 
   protected delete(id?: string) {
     if (!id) return;
-    this.http.delete<void>(`${environment.apiBaseUrl}/admin/expenses/${id}`).subscribe({
-      next: () => this.expenses.set(this.expenses().filter((e) => e.id !== id)),
-      error: (err) => {
-        console.error('Failed to delete expense', err);
-        this.error = 'Failed to delete expense';
-      },
-    });
+    this.confirmDelete = id;
   }
 
   protected uploadReceipt(event: Event) {
@@ -150,5 +146,22 @@ export class ExpensesComponent {
       receiptUrl: '',
       notes: '',
     };
+  }
+
+  protected confirmDeleteOk() {
+    const id = this.confirmDelete;
+    if (!id) return;
+    this.http.delete<void>(`${environment.apiBaseUrl}/admin/expenses/${id}`).subscribe({
+      next: () => this.expenses.set(this.expenses().filter((e) => e.id !== id)),
+      error: (err) => {
+        console.error('Failed to delete expense', err);
+        this.error = 'Failed to delete expense';
+      },
+      complete: () => (this.confirmDelete = null),
+    });
+  }
+
+  protected cancelDelete() {
+    this.confirmDelete = null;
   }
 }

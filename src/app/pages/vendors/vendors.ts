@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog';
 
 interface Vendor {
   code: string;
@@ -16,7 +17,7 @@ interface Vendor {
 @Component({
   selector: 'app-vendors',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmDialogComponent],
   templateUrl: './vendors.html',
   styleUrl: './vendors.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +28,7 @@ export class VendorsComponent {
   protected readonly loading = signal(false);
   protected error: string | null = null;
   protected showModal = false;
+  protected confirmDelete: string | null = null;
 
   protected form: Vendor = {
     code: '',
@@ -81,13 +83,7 @@ export class VendorsComponent {
   }
 
   protected remove(code: string) {
-    this.http.delete<void>(`${environment.apiBaseUrl}/admin/vendors/${code}`).subscribe({
-      next: () => this.vendors.set(this.vendors().filter((v) => v.code !== code)),
-      error: (err) => {
-        console.error('Failed to delete vendor', err);
-        this.error = 'Failed to delete vendor';
-      },
-    });
+    this.confirmDelete = code;
   }
 
   protected resetForm() {
@@ -102,5 +98,22 @@ export class VendorsComponent {
 
   protected closeModal() {
     this.showModal = false;
+  }
+
+  protected confirmDeleteOk() {
+    const code = this.confirmDelete;
+    if (!code) return;
+    this.http.delete<void>(`${environment.apiBaseUrl}/admin/vendors/${code}`).subscribe({
+      next: () => this.vendors.set(this.vendors().filter((v) => v.code !== code)),
+      error: (err) => {
+        console.error('Failed to delete vendor', err);
+        this.error = 'Failed to delete vendor';
+      },
+      complete: () => (this.confirmDelete = null),
+    });
+  }
+
+  protected cancelDelete() {
+    this.confirmDelete = null;
   }
 }

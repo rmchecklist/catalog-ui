@@ -130,9 +130,16 @@
 </section>
 
 <div class="pagination">
-  <button class="btn ghost" type="button" (click)="prevPage()" [disabled]="page() === 0">Prev</button>
+  <button class="btn ghost" type="button" (click)="prevPage()" [disabled]="page() === 0">
+    Prev
+  </button>
   <span class="muted">Page {{ page() + 1 }} of {{ totalPages() }}</span>
-  <button class="btn ghost" type="button" (click)="nextPage()" [disabled]="page() >= totalPages() - 1">
+  <button
+    class="btn ghost"
+    type="button"
+    (click)="nextPage()"
+    [disabled]="page() >= totalPages() - 1"
+  >
     Next
   </button>
 </div>

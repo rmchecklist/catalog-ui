@@ -9,7 +9,6 @@
         Refresh
       </button>
     </div>
-
     @if (loading()) {
     <p class="muted">Loading...</p>
     } @else if (!invoices().length) {
@@ -26,6 +25,7 @@
             <th>Email</th>
             <th>Created</th>
             <th>Links</th>
+            <th>Send Email</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -46,24 +46,137 @@
               <a [href]="inv.viewUrl" target="_blank" rel="noreferrer">View</a>
               @if (inv.pdfUrl) { <a [href]="inv.pdfUrl" target="_blank" rel="noreferrer">PDF</a> }
             </td>
-            <td class="links">
-              <button class="link-btn" type="button" (click)="deleteInvoice(inv)">Delete</button>
+
+            <td>
               <div class="resend">
                 <input
                   type="email"
                   placeholder="email"
-                  [(ngModel)]="sendEmail"
+                  [ngModel]="getEmail(inv)"
+                  (ngModelChange)="updateEmail(inv.id, $event)"
                   [attr.aria-label]="'Send to email'"
                 />
                 <button class="btn ghost" type="button" (click)="resend(inv)">Send</button>
               </div>
+            </td>
+            <td class="links">
+              <button class="link-btn" type="button" (click)="deleteInvoice(inv)">Delete</button>
+              <button
+                class="link-btn"
+                type="button"
+                (click)="openEdit(inv)"
+                [disabled]="isFinal(inv.status)"
+              >
+                Edit
+              </button>
             </td>
           </tr>
           }
         </tbody>
       </table>
     </div>
+    } @if (actionError) {
+    <p class="status error">{{ actionError }}</p>
     }
-    @if (actionError) { <p class="status error">{{ actionError }}</p> }
   </div>
+
+  @if (editingOpen()) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2>Edit {{ editing?.invoiceNumber }}</h2>
+          <p class="muted">{{ editing?.type }}</p>
+        </div>
+        <button class="icon-btn" type="button" (click)="closeEdit()">✕</button>
+      </div>
+
+      <label class="field">
+        <span class="field-label">Status</span>
+        <select class="fancy-select" [(ngModel)]="editing!.status" [disabled]="!editable">
+          @for (s of statuses; track s) {
+          <option [value]="s">{{ s }}</option>
+          }
+        </select>
+      </label>
+
+      <div class="items-section">
+        <div class="section-header">
+          <h3>Line items</h3>
+          <button class="btn small" type="button" (click)="addItem()" [disabled]="!editable">
+            Add item
+          </button>
+        </div>
+        @if (editing?.items?.length) {
+        <div class="items-grid">
+          @for (item of editing!.items; let i = $index; track i) {
+          <div class="item-row">
+            <input
+              type="text"
+              placeholder="Product name"
+              [(ngModel)]="item.productName"
+              [disabled]="!editable"
+            />
+            <input
+              type="text"
+              placeholder="Option"
+              [(ngModel)]="item.optionLabel"
+              [disabled]="!editable"
+            />
+            <input type="text" placeholder="SKU" [(ngModel)]="item.sku" [disabled]="!editable" />
+            <input
+              type="number"
+              min="1"
+              placeholder="Qty"
+              [(ngModel)]="item.quantity"
+              [disabled]="!editable"
+            />
+            <input
+              type="number"
+              step="0.01"
+              placeholder="Price"
+              [(ngModel)]="item.sellingPrice"
+              [disabled]="!editable"
+            />
+            <input
+              type="number"
+              step="0.01"
+              placeholder="Market price"
+              [(ngModel)]="item.marketPrice"
+              [disabled]="!editable"
+            />
+            <button class="icon-btn" type="button" (click)="removeItem(i)" [disabled]="!editable">
+              ✕
+            </button>
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="muted">No items yet.</p>
+        }
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" type="button" (click)="saveEdit()" [disabled]="!editable">
+          Save
+        </button>
+        <button class="btn ghost" type="button" (click)="closeEdit()">Cancel</button>
+      </div>
+
+      @if (history?.length) {
+      <div class="history-section">
+        <h3>Status history</h3>
+        <ul class="history-list">
+          @for (h of history; track h.changedAt) {
+          <li>
+            <span class="pill">{{ h.status }}</span>
+            <span class="muted">{{ h.changedAt | date : 'short' }}</span>
+          </li>
+          }
+        </ul>
+      </div>
+      }
+    </div>
+  </div>
+  }
 </div>

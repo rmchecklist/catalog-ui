@@ -19,7 +19,7 @@
           <th>Phones</th>
           <th>Company</th>
           <th>Billing city</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -65,12 +65,10 @@
         </label>
         <label class="field">
           <span class="field-label">Customer type</span>
-          <div>
-            <select [(ngModel)]="form.type">
-              <option value="BUSINESS">Business</option>
-              <option value="INDIVIDUAL">Individual</option>
-            </select>
-          </div>
+          <select class="fancy-select" [(ngModel)]="form.type">
+            <option value="BUSINESS">Business</option>
+            <option value="INDIVIDUAL">Individual</option>
+          </select>
         </label>
         <label class="field">
           <span class="field-label">Display name</span>
@@ -127,13 +125,28 @@
       </div>
 
       <div class="tab-bar">
-        <button class="tab" type="button" [class.active]="activeTab === 'billing'" (click)="switchTab('billing')">
+        <button
+          class="tab"
+          type="button"
+          [class.active]="activeTab === 'billing'"
+          (click)="switchTab('billing')"
+        >
           Billing address
         </button>
-        <button class="tab" type="button" [class.active]="activeTab === 'shipping'" (click)="switchTab('shipping')">
+        <button
+          class="tab"
+          type="button"
+          [class.active]="activeTab === 'shipping'"
+          (click)="switchTab('shipping')"
+        >
           Shipping address
         </button>
-        <button class="tab" type="button" [class.active]="activeTab === 'contacts'" (click)="switchTab('contacts')">
+        <button
+          class="tab"
+          type="button"
+          [class.active]="activeTab === 'contacts'"
+          (click)="switchTab('contacts')"
+        >
           Contact persons
         </button>
       </div>
@@ -144,23 +157,43 @@
         <div class="form-grid">
           <label class="field">
             <span class="field-label">Attention</span>
-            <input type="text" [(ngModel)]="form.billingAddress.attention" (ngModelChange)="syncShippingIfLinked()" />
+            <input
+              type="text"
+              [(ngModel)]="form.billingAddress.attention"
+              (ngModelChange)="syncShippingIfLinked()"
+            />
           </label>
           <label class="field">
             <span class="field-label">Address 1</span>
-            <input type="text" [(ngModel)]="form.billingAddress.address1" (ngModelChange)="syncShippingIfLinked()" />
+            <input
+              type="text"
+              [(ngModel)]="form.billingAddress.address1"
+              (ngModelChange)="syncShippingIfLinked()"
+            />
           </label>
           <label class="field">
             <span class="field-label">Address 2</span>
-            <input type="text" [(ngModel)]="form.billingAddress.address2" (ngModelChange)="syncShippingIfLinked()" />
+            <input
+              type="text"
+              [(ngModel)]="form.billingAddress.address2"
+              (ngModelChange)="syncShippingIfLinked()"
+            />
           </label>
           <label class="field">
             <span class="field-label">City</span>
-            <input type="text" [(ngModel)]="form.billingAddress.city" (ngModelChange)="syncShippingIfLinked()" />
+            <input
+              type="text"
+              [(ngModel)]="form.billingAddress.city"
+              (ngModelChange)="syncShippingIfLinked()"
+            />
           </label>
           <label class="field">
             <span class="field-label">State</span>
-            <select [(ngModel)]="form.billingAddress.state" (ngModelChange)="syncShippingIfLinked()">
+            <select
+              class="fancy-select"
+              [(ngModel)]="form.billingAddress.state"
+              (ngModelChange)="syncShippingIfLinked()"
+            >
               <option value="">Select state</option>
               @for (s of states; track s.code) {
               <option [value]="s.code">{{ s.name }}</option>
@@ -169,7 +202,11 @@
           </label>
           <label class="field">
             <span class="field-label">Zip</span>
-            <input type="text" [(ngModel)]="form.billingAddress.zip" (ngModelChange)="syncShippingIfLinked()" />
+            <input
+              type="text"
+              [(ngModel)]="form.billingAddress.zip"
+              (ngModelChange)="syncShippingIfLinked()"
+            />
           </label>
           <label class="field">
             <span class="field-label">Phone</span>
@@ -183,13 +220,15 @@
             />
           </label>
         </div>
-        </div>
-      }
-
-      @if (activeTab === 'shipping') {
+      </div>
+      } @if (activeTab === 'shipping') {
       <div class="address-section">
         <label class="flex-row">
-          <input type="checkbox" [checked]="shipSameAsBilling" (change)="toggleShipSameAsBilling($event.target.checked)" />
+          <input
+            type="checkbox"
+            [checked]="shipSameAsBilling"
+            (change)="toggleShipSameAsBilling($event.target.checked)"
+          />
           <span>Shipping address is the same as billing</span>
         </label>
         <h3>Shipping address</h3>
@@ -212,7 +251,7 @@
           </label>
           <label class="field">
             <span class="field-label">State</span>
-            <select [(ngModel)]="form.shippingAddress.state">
+            <select class="fancy-select" [(ngModel)]="form.shippingAddress.state">
               <option value="">Select state</option>
               @for (s of states; track s.code) {
               <option [value]="s.code">{{ s.name }}</option>
@@ -235,9 +274,7 @@
           </label>
         </div>
       </div>
-      }
-
-      @if (activeTab === 'contacts') {
+      } @if (activeTab === 'contacts') {
       <div class="contacts-section">
         <div class="section-header">
           <h3>Contact persons</h3>

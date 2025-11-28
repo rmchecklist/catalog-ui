@@ -32,6 +32,9 @@ interface InvoiceItem {
 
 interface InvoiceDetail extends InvoiceSummary {
   items: InvoiceItem[];
+  phone?: string;
+  smsOptIn?: boolean;
+  whatsappOptIn?: boolean;
 }
 
 interface StatusHistory {
@@ -185,6 +188,9 @@ export class InvoicesPageComponent {
       .put<void>(`${environment.apiBaseUrl}/admin/invoices/${path}/${this.editing.id}`, {
         status: this.editing.status,
         items: this.editing.items,
+        phone: this.editing.phone,
+        smsOptIn: this.editing.smsOptIn,
+        whatsappOptIn: this.editing.whatsappOptIn,
       })
       .subscribe({
         next: () => {

@@ -12,14 +12,14 @@ import { MetricsService } from '../../shared/services/metrics.service';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-admin-dashboard',
+  selector: 'app-product-management',
   standalone: true,
   imports: [CommonModule, HttpClientModule, RouterLink, FormsModule, NgChartsModule],
-  templateUrl: './admin-dashboard.html',
-  styleUrl: './admin-dashboard.css',
+  templateUrl: './product-management.html',
+  styleUrl: './product-management.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminDashboardComponent {
+export class ProductManagement {
   private readonly productService = inject(ProductService);
   private readonly http = inject(HttpClient);
   readonly metrics = inject(MetricsService);

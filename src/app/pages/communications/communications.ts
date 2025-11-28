@@ -33,10 +33,23 @@ export class CommunicationsComponent implements OnInit {
   protected showCompose = false;
   protected compose = { to: '', subject: '', body: '' };
   protected composeError: string | null = null;
+  protected reminder = {
+    subject: '',
+    message: '',
+    emails: '',
+    phones: '',
+    sendEmail: true,
+    sendSms: false,
+    sendWhatsapp: false,
+    includeAllCustomers: false,
+  };
+  protected reminderStatus: string | null = null;
+  protected customersEmails: string[] = [];
 
   ngOnInit(): void {
     this.service.loadThreads();
     this.loadVendors();
+    this.loadCustomers();
   }
 
   protected filteredThreads() {
@@ -119,6 +132,15 @@ export class CommunicationsComponent implements OnInit {
       });
   }
 
+  private loadCustomers() {
+    this.http.get<Array<{ email?: string }>>(`${environment.apiBaseUrl}/admin/customers`).subscribe({
+      next: (list) => {
+        this.customersEmails = list.map((c) => c.email).filter((e): e is string => !!e);
+      },
+      error: (err) => console.error('Failed to load customers', err),
+    });
+  }
+
   protected openCompose() {
     this.compose = { to: '', subject: '', body: '' };
     this.composeError = null;
@@ -127,5 +149,41 @@ export class CommunicationsComponent implements OnInit {
 
   protected closeCompose() {
     this.showCompose = false;
+  }
+
+  protected sendReminder() {
+    const emails = (this.reminder.emails || '')
+      .split(/[\n,]+/)
+      .map((e) => e.trim())
+      .filter(Boolean);
+    if (this.reminder.includeAllCustomers) {
+      emails.push(...this.customersEmails);
+    }
+    const phones = (this.reminder.phones || '')
+      .split(/[\n,]+/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    if (!this.reminder.subject || !this.reminder.message) {
+      this.reminderStatus = 'Subject and message are required.';
+      return;
+    }
+    this.reminderStatus = 'Sending…';
+    this.http
+      .post(`${environment.apiBaseUrl}/communications/reminders`, {
+        subject: this.reminder.subject,
+        message: this.reminder.message,
+        emails,
+        phones,
+        sendEmail: this.reminder.sendEmail,
+        sendSms: this.reminder.sendSms,
+        sendWhatsapp: this.reminder.sendWhatsapp,
+      })
+      .subscribe({
+        next: () => (this.reminderStatus = 'Sent'),
+        error: (err) => {
+          console.error('Failed to send reminder', err);
+          this.reminderStatus = 'Failed to send reminder';
+        },
+      });
   }
 }

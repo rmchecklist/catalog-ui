@@ -1,7 +1,65 @@
- .comm-layout {
+.comm-layout {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
   gap: 1rem;
+}
+
+.reminder-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  background: linear-gradient(180deg, var(--surface-1), var(--card-color));
+  box-shadow: var(--soft-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.reminder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.channels {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.reminder-card .field input,
+.reminder-card .field textarea {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 0.65rem;
+  background: var(--card-color);
+}
+
+.status.info {
+  color: var(--muted-color);
+}
+
+.inline-checkbox {
+  align-items: center;
+    display: inline-flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start;
+}
+
+.actions.left {
+  justify-content: flex-start;
+}
+
+@media (max-width: 960px) {
+  .comm-layout {
+    grid-template-columns: 1fr;
+  }
+  .channels {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* Shell handles nav; only content layout here */
@@ -279,7 +337,6 @@
 .field textarea,
 .field input,
 .field select {
-  width: 100%;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 0.6rem 0.75rem;

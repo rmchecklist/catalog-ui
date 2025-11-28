@@ -1,0 +1,326 @@
+<div class="admin-card">
+  <div class="header">
+    <div class="header-left">
+      <div>
+        <h1>Product management</h1>
+        <p class="lede">Manage catalog items and upload imagery stored in Supabase.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn primary" type="button" (click)="openCreateModal()">Add product</button>
+      <a class="btn ghost" routerLink="/">Back to catalog</a>
+    </div>
+  </div>
+
+  @if (showForm) {
+  <div class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>{{ editingSlug ? 'Edit product' : 'Create product' }}</h2>
+        <button type="button" class="icon-btn" (click)="closeModal()">✕</button>
+      </div>
+      <form class="admin-form" (ngSubmit)="submit()">
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label">Name</span>
+            <div class="input-shell">
+              <input type="text" name="name" [(ngModel)]="form.name" required />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Brand</span>
+            <div class="input-shell">
+              <input type="text" name="brand" [(ngModel)]="form.brand" required />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Vendor (optional)</span>
+            <div class="input-shell">
+              <input type="text" name="vendor" [(ngModel)]="form.vendor" />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Category</span>
+            <div class="input-shell">
+              <input type="text" name="category" [(ngModel)]="form.category" required />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Upload image</span>
+            <div class="input-shell file-shell">
+              <input
+                type="file"
+                accept="image/*"
+                (change)="handleImageUpload($event)"
+                [disabled]="uploadingImage"
+              />
+            </div>
+            @if (uploadingImage) {
+            <small class="upload-hint">Uploading image...</small>
+            } @if (uploadedImageName && !uploadingImage) {
+            <small class="upload-success">Uploaded: {{ uploadedImageName }}</small>
+            } @if (uploadWarning) {
+            <small class="upload-warning">{{ uploadWarning }}</small>
+            } @if (uploadError) {
+            <small class="upload-error">{{ uploadError }}</small>
+            }
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field-label">Description</span>
+          <div class="input-shell textarea-shell">
+            <textarea
+              rows="3"
+              name="description"
+              [(ngModel)]="form.description"
+              placeholder="Short description"
+            ></textarea>
+          </div>
+        </label>
+
+        <div class="form-grid">
+          <label class="field">
+            <span class="field-label">Option label</span>
+            <div class="input-shell">
+              <input
+                type="text"
+                name="optionLabel"
+                [(ngModel)]="form.optionLabel"
+                placeholder="e.g., 500ml"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Weight/pack (optional)</span>
+            <div class="input-shell">
+              <input
+                type="text"
+                name="optionWeight"
+                [(ngModel)]="form.optionWeight"
+                placeholder="e.g., 20lb"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Min quantity</span>
+            <div class="input-shell">
+              <input type="number" name="optionMinQty" [(ngModel)]="form.optionMinQty" min="1" />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Stock</span>
+            <div class="input-shell">
+              <input type="number" name="optionStock" [(ngModel)]="form.optionStock" min="0" />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Low stock threshold</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionLowStockThreshold"
+                [(ngModel)]="form.optionLowStockThreshold"
+                min="0"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Selling price</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionSellingPrice"
+                [(ngModel)]="form.optionSellingPrice"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Market price</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionMarketPrice"
+                [(ngModel)]="form.optionMarketPrice"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">Purchase price (internal)</span>
+            <div class="input-shell">
+              <input
+                type="number"
+                name="optionPurchasePrice"
+                [(ngModel)]="form.optionPurchasePrice"
+                min="0"
+                step="0.01"
+              />
+            </div>
+          </label>
+          <label class="field">
+            <span class="field-label">SKU (optional)</span>
+            <div class="input-shell">
+              <input type="text" name="optionSku" [(ngModel)]="form.optionSku" />
+            </div>
+          </label>
+          <div class="field add-option">
+            <span class="field-label">&nbsp;</span>
+            <button class="btn ghost" type="button" (click)="addOption()">Add option</button>
+          </div>
+        </div>
+
+        @if (form.options.length) {
+        <div class="options-editor">
+          <div class="options-head">
+            <span>Label</span>
+            <span>Weight</span>
+            <span>Min qty</span>
+            <span>Stock</span>
+            <span>Low stock</span>
+            <span>Selling</span>
+            <span>Market</span>
+            <span>Purchase</span>
+            <span>SKU</span>
+            <span></span>
+          </div>
+          @for (opt of form.options; let i = $index; track i) {
+          <div class="options-row">
+            <input
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].label"
+              placeholder="Label"
+            />
+            <input
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].weight"
+              placeholder="20lb"
+            />
+            <input
+              type="number"
+              min="1"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].minQty"
+              placeholder="1"
+            />
+            <input
+              type="number"
+              min="0"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].stock"
+              placeholder="0"
+            />
+            <input
+              type="number"
+              min="0"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].lowStockThreshold"
+              placeholder="10"
+            />
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].sellingPrice"
+              placeholder="0.00"
+            />
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].marketPrice"
+              placeholder="0.00"
+            />
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].purchasePrice"
+              placeholder="0.00"
+            />
+            <input
+              type="text"
+              [ngModelOptions]="{ standalone: true }"
+              [(ngModel)]="form.options[i].sku"
+              placeholder="SKU"
+            />
+            <button type="button" class="icon-btn" (click)="removeOption(i)">✕</button>
+          </div>
+          }
+        </div>
+        }
+
+        <div class="actions">
+          <button class="btn primary" type="submit" [disabled]="uploadingImage || saving">
+            {{ editingSlug ? 'Update product' : 'Add product' }}
+          </button>
+          <button class="btn ghost" type="button" (click)="closeModal()">Cancel</button>
+        </div>
+        @if (saveError) {
+        <div class="form-error">{{ saveError }}</div>
+        }
+      </form>
+    </div>
+  </div>
+  } @if (products().length) {
+  <section class="product-list">
+    <h2>Existing products</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Brand</th>
+          <th>Vendor</th>
+          <th>Category</th>
+          <th>Options</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of products(); track product.slug) {
+        <tr [class.editing]="editingSlug === product.slug">
+          <td>{{ product.name }}</td>
+          <td>{{ product.brand }}</td>
+          <td>{{ product.vendor || '—' }}</td>
+          <td>{{ product.category }}</td>
+          <td>{{ product.options.length }}</td>
+          <td class="table-actions">
+            <button class="link-btn" type="button" (click)="startEdit(product)">Edit</button>
+            <button class="link-btn danger" type="button" (click)="deleteProduct(product.slug)">
+              Delete
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+  }
+</div>
+
+@if (deletePending) {
+<div class="modal-backdrop">
+  <div class="modal small">
+    <div class="modal-header">
+      <h3>Delete product</h3>
+      <button type="button" class="icon-btn" (click)="cancelDelete()">✕</button>
+    </div>
+    <p>
+      Are you sure you want to delete <strong>{{ deletePending.name }}</strong
+      >?
+    </p>
+    <div class="actions">
+      <button class="btn danger" type="button" (click)="confirmDelete()">Delete</button>
+      <button class="btn ghost" type="button" (click)="cancelDelete()">Cancel</button>
+    </div>
+  </div>
+</div>
+}

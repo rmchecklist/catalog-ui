@@ -85,20 +85,56 @@
     <div class="modal">
       <div class="modal-header">
         <div>
-          <h2>Edit {{ editing?.invoiceNumber }}</h2>
-          <p class="muted">{{ editing?.type }}</p>
+          <h2>Edit {{ editing?.invoiceNumber || '' }}</h2>
+          <p class="muted">{{ editing?.type || '' }}</p>
         </div>
         <button class="icon-btn" type="button" (click)="closeEdit()">✕</button>
       </div>
 
       <label class="field">
         <span class="field-label">Status</span>
-        <select class="fancy-select" [(ngModel)]="editing!.status" [disabled]="!editable">
+        <select
+          class="fancy-select"
+          [ngModel]="editing?.status"
+          (ngModelChange)="editing && (editing.status = $event)"
+          [disabled]="!editable"
+        >
           @for (s of statuses; track s) {
           <option [value]="s">{{ s }}</option>
           }
         </select>
       </label>
+
+      <div class="form-grid">
+        <label class="field">
+          <span class="field-label">Notify phone</span>
+          <input
+            type="tel"
+            [ngModel]="editing?.phone"
+            (ngModelChange)="editing && (editing.phone = $event)"
+            placeholder="+1..."
+            [disabled]="!editable"
+          />
+        </label>
+        <label class="field checkbox-field">
+          <input
+            type="checkbox"
+            [ngModel]="editing?.smsOptIn"
+            (ngModelChange)="editing && (editing.smsOptIn = $event)"
+            [disabled]="!editable"
+          />
+          <span>Send SMS</span>
+        </label>
+        <label class="field checkbox-field">
+          <input
+            type="checkbox"
+            [ngModel]="editing?.whatsappOptIn"
+            (ngModelChange)="editing && (editing.whatsappOptIn = $event)"
+            [disabled]="!editable"
+          />
+          <span>Send WhatsApp</span>
+        </label>
+      </div>
 
       <div class="items-section">
         <div class="section-header">

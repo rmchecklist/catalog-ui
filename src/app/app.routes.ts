@@ -26,12 +26,18 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/admin-shell/admin-shell').then((m) => m.AdminShellComponent),
     children: [
-      { path: '', redirectTo: 'product-management', pathMatch: 'full' },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        data: { breadcrumb: 'Dashboard' },
+        loadComponent: () =>
+          import('./pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboardComponent),
+      },
       {
         path: 'product-management',
         data: { breadcrumb: 'Product management' },
         loadComponent: () =>
-          import('./pages/admin-dashboard/admin-dashboard').then((m) => m.AdminDashboardComponent),
+          import('./pages/product-management/product-management').then((m) => m.ProductManagement),
       },
       {
         path: 'communications',

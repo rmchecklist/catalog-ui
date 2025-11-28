@@ -1,5 +1,66 @@
 <div class="admin-layout">
   <div class="admin-card">
+    <div class="reminder-card">
+      <div>
+        <h2>Reminders</h2>
+        <p class="muted">
+          Send WhatsApp/SMS/Email about orders. Include customers or custom recipients.
+        </p>
+      </div>
+      <div class="reminder-form">
+        <label class="field">
+          <span class="muted">Subject</span>
+          <input type="text" [(ngModel)]="reminder.subject" placeholder="Subject" />
+        </label>
+        <label class="field">
+          <span class="muted">Message</span>
+          <textarea rows="2" [(ngModel)]="reminder.message" placeholder="Message body"></textarea>
+        </label>
+        <label class="field">
+          <span class="muted">Emails (comma or newline)</span>
+          <textarea
+            rows="2"
+            [(ngModel)]="reminder.emails"
+            placeholder="a@b.com, c@d.com"
+          ></textarea>
+        </label>
+        <label class="field">
+          <span class="muted">Phones (comma or newline, E.164)</span>
+          <textarea rows="2" [(ngModel)]="reminder.phones" placeholder="+1..."></textarea>
+        </label>
+        <label class="field checkbox-field inline-checkbox">
+          <input type="checkbox" [(ngModel)]="reminder.includeAllCustomers" />
+          <span>Include all customer emails</span>
+        </label>
+        <div class="channels">
+          <label class="field checkbox-field">
+            <input type="checkbox" [(ngModel)]="reminder.sendEmail" />
+            <span>Email</span>
+          </label>
+          <label class="field checkbox-field">
+            <input type="checkbox" [(ngModel)]="reminder.sendSms" />
+            <span>SMS</span>
+          </label>
+          <label class="field checkbox-field">
+            <input type="checkbox" [(ngModel)]="reminder.sendWhatsapp" />
+            <span>WhatsApp</span>
+          </label>
+        </div>
+        <div class="actions left">
+          <button class="btn primary" type="button" (click)="sendReminder()">Send reminder</button>
+        </div>
+      </div>
+      @if (reminderStatus) {
+      <p
+        class="status"
+        [class.error]="reminderStatus.startsWith('Failed')"
+        [class.info]="reminderStatus === 'Sending…'"
+      >
+        {{ reminderStatus }}
+      </p>
+      }
+    </div>
+
     <div class="comm-layout">
       <aside class="thread-list">
         <div class="list-header">
@@ -117,17 +178,19 @@
         <span class="muted">Subject</span>
         <input type="text" [(ngModel)]="compose.subject" placeholder="Subject" />
       </label>
-       <label class="field">
-      <span class="muted">Message</span>
-      <textarea rows="4" [(ngModel)]="compose.body" placeholder="Write your email..."></textarea>
-    </label>
+      <label class="field">
+        <span class="muted">Message</span>
+        <textarea rows="4" [(ngModel)]="compose.body" placeholder="Write your email..."></textarea>
+      </label>
     </div>
 
     <div class="actions">
       <button class="btn primary" type="button" (click)="sendVendor()">Send</button>
       <button class="btn ghost" type="button" (click)="closeCompose()">Cancel</button>
     </div>
-    @if (composeError) { <p class="status error">{{ composeError }}</p> }
+    @if (composeError) {
+    <p class="status error">{{ composeError }}</p>
+    }
   </div>
 </div>
 }

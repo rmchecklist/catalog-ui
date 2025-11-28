@@ -1,17 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { finalize } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { Product } from '../../shared/models/product';
 import { CreateProductRequest, ProductService } from '../../shared/services/product.service';
+import { MetricsService } from '../../shared/services/metrics.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, NgChartsModule],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +22,26 @@ import { CreateProductRequest, ProductService } from '../../shared/services/prod
 export class AdminDashboardComponent {
   private readonly productService = inject(ProductService);
   private readonly http = inject(HttpClient);
+  readonly metrics = inject(MetricsService);
   protected readonly products = this.productService.products;
+  protected readonly orderMetrics = this.metrics.orders;
+  protected readonly quoteMetrics = this.metrics.quotes;
+  protected readonly productMetrics = this.metrics.products;
+  protected readonly customerMetrics = this.metrics.customers;
+  protected readonly metricsLoading = this.metrics.loading;
+  protected orderStatusChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  protected orderRevenueChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  protected quoteStatusChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  protected chartOptions: ChartOptions = {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { display: false } }, y: { grid: { color: '#e5e7eb' } } },
+  };
+  private readonly chartsEffect = effect(() => {
+    this.orderMetrics();
+    this.quoteMetrics();
+    this.buildCharts();
+  });
 
   protected form = {
     name: '',
@@ -58,6 +80,10 @@ export class AdminDashboardComponent {
   protected saving = false;
   protected saveError: string | null = null;
   protected deletePending: { slug: string; name: string } | null = null;
+
+  ngOnInit() {
+    this.metrics.load();
+  }
 
   protected submit() {
     if (!this.form.name || !this.form.brand || !this.form.category) {
@@ -269,7 +295,6 @@ export class AdminDashboardComponent {
     this.reset();
   }
 
-
   protected confirmDelete() {
     const pending = this.deletePending;
     if (!pending) return;
@@ -283,5 +308,34 @@ export class AdminDashboardComponent {
 
   protected cancelDelete() {
     this.deletePending = null;
+  }
+
+  private buildCharts() {
+    const orders = this.orderMetrics();
+    if (orders?.byStatus) {
+      const labels = Object.keys(orders.byStatus);
+      const data = Object.values(orders.byStatus);
+      this.orderStatusChart = {
+        labels,
+        datasets: [{ data, backgroundColor: '#2563eb' }],
+      };
+    }
+    if (orders?.revenueByMonth) {
+      const labels = Object.keys(orders.revenueByMonth).sort();
+      const data = labels.map((l) => orders.revenueByMonth![l] ?? 0);
+      this.orderRevenueChart = {
+        labels,
+        datasets: [{ data, backgroundColor: '#0ea5e9' }],
+      };
+    }
+    const quotes = this.quoteMetrics();
+    if (quotes?.byStatus) {
+      const labels = Object.keys(quotes.byStatus);
+      const data = Object.values(quotes.byStatus);
+      this.quoteStatusChart = {
+        labels,
+        datasets: [{ data, backgroundColor: '#f59e0b' }],
+      };
+    }
   }
 }

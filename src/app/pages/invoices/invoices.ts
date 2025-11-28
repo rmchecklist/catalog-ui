@@ -64,6 +64,7 @@ export class InvoicesPageComponent {
   protected productSuggestions: Record<number, ProductSuggestion[]> = {};
   protected productOptions: Record<number, ProductOption[]> = {};
   protected productSearch: Record<number, string> = {};
+  protected formError: string | null = null;
 
   ngOnInit() {
     this.load();
@@ -168,6 +169,16 @@ export class InvoicesPageComponent {
 
   protected saveEdit() {
     if (!this.editing) return;
+    if (this.isFinal(this.editing.status)) {
+      this.formError = 'Finalized invoices cannot be edited.';
+      return;
+    }
+    const validation = this.validateItems();
+    if (validation) {
+      this.formError = validation;
+      return;
+    }
+    this.formError = null;
     const path = this.editing.type === 'ORDER' ? 'orders' : 'quotes';
     this.actionError = null;
     this.http
@@ -245,5 +256,26 @@ export class InvoicesPageComponent {
     }
     items[idx] = item;
     this.editing = { ...this.editing, items };
+  }
+
+  protected totalAmount(): number {
+    if (!this.editing?.items?.length) return 0;
+    return this.editing.items.reduce((sum, item) => {
+      const qty = item.quantity ?? 0;
+      const price = item.sellingPrice ?? 0;
+      return sum + qty * price;
+    }, 0);
+  }
+
+  private validateItems(): string | null {
+    if (!this.editing?.items?.length) {
+      return 'Add at least one line item.';
+    }
+    for (const item of this.editing.items) {
+      if (!item.productName || !item.optionLabel) return 'Select a product and option for each line.';
+      if (!item.quantity || item.quantity <= 0) return 'Quantity must be greater than zero.';
+      if (item.sellingPrice !== undefined && item.sellingPrice < 0) return 'Price must be zero or greater.';
+    }
+    return null;
   }
 }

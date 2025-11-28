@@ -1,4 +1,58 @@
 <div class="admin-card">
+  <div class="header">
+    <div class="header-left">
+      <div>
+        <h1>Admin overview</h1>
+        <p class="lede">Quick stats across orders, quotes, products, and customers.</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn ghost" type="button" (click)="metrics.load()" [disabled]="metricsLoading()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card">
+      <div class="label">Orders (open)</div>
+      <div class="value">{{ orderMetrics()?.total ?? '–' }}</div>
+      <div class="meta">Open {{ orderMetrics()?.open ?? '–' }} · Fulfilled {{ orderMetrics()?.fulfilled ?? '–' }} · Shipped {{ orderMetrics()?.shipped ?? '–' }}</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Revenue (total)</div>
+      <div class="value">{{ orderMetrics()?.revenue | currency : 'USD' : 'symbol' : '1.0-0' }}</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Quotes</div>
+      <div class="value">{{ quoteMetrics()?.total ?? '–' }}</div>
+      <div class="meta">Open {{ quoteMetrics()?.open ?? '–' }} · Responded {{ quoteMetrics()?.responded ?? '–' }} · Approved {{ quoteMetrics()?.approved ?? '–' }}</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Products</div>
+      <div class="value">{{ productMetrics()?.total ?? '–' }}</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Customers</div>
+      <div class="value">{{ customerMetrics()?.total ?? '–' }}</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Orders by status</h3>
+      <canvas baseChart [data]="orderStatusChart" [type]="'bar'" [options]="chartOptions"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Revenue by month</h3>
+      <canvas baseChart [data]="orderRevenueChart" [type]="'bar'" [options]="chartOptions"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Quotes by status</h3>
+      <canvas baseChart [data]="quoteStatusChart" [type]="'bar'" [options]="chartOptions"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="admin-card">
     <div class="header">
       <div class="header-left">
         <div>

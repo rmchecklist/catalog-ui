@@ -111,18 +111,33 @@
         <div class="items-grid">
           @for (item of editing!.items; let i = $index; track i) {
           <div class="item-row">
-            <input
-              type="text"
-              placeholder="Product name"
-              [(ngModel)]="item.productName"
-              [disabled]="!editable"
-            />
-            <input
-              type="text"
-              placeholder="Option"
-              [(ngModel)]="item.optionLabel"
-              [disabled]="!editable"
-            />
+            <div class="product-search">
+              <input
+                type="text"
+                placeholder="Search product"
+                [ngModel]="productSearch[i] ?? item.productName"
+                (ngModelChange)="searchProduct(i, $event)"
+                [disabled]="!editable"
+              />
+              @if (productSuggestions[i]?.length && editable) {
+              <div class="suggestions">
+                @for (p of productSuggestions[i]; track p.slug) {
+                <button type="button" (click)="selectProduct(i, p)">{{ p.name }}</button>
+                }
+              </div>
+              }
+            </div>
+            <select
+              class="fancy-select"
+              [ngModel]="item.optionLabel"
+              (ngModelChange)="applyOption(i, $event)"
+              [disabled]="!editable || !(productOptions[i]?.length)"
+            >
+              <option value="">Select option</option>
+              @for (opt of productOptions[i]; track opt.label) {
+              <option [value]="opt.label">{{ opt.label }}</option>
+              }
+            </select>
             <input type="text" placeholder="SKU" [(ngModel)]="item.sku" [disabled]="!editable" />
             <input
               type="number"
@@ -155,6 +170,14 @@
         <p class="muted">No items yet.</p>
         }
       </div>
+
+      <div class="totals">
+        <div class="muted">Invoice total</div>
+        <div class="total-amount">{{ totalAmount() | currency }}</div>
+      </div>
+
+      @if (formError) { <p class="status error">{{ formError }}</p> }
+      @if (actionError) { <p class="status error">{{ actionError }}</p> }
 
       <div class="actions">
         <button class="btn primary" type="button" (click)="saveEdit()" [disabled]="!editable">

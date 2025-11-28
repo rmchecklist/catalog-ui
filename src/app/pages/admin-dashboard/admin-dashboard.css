@@ -60,6 +60,7 @@
   border: 1px solid var(--border-color);
   padding: 1.5rem 1.75rem;
   border-radius: 14px;
+  margin-bottom: 1rem;
 }
 
 .eyebrow {
@@ -96,6 +97,54 @@ h1 {
 .header-actions {
   display: flex;
   gap: 0.5rem;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.metric-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.9rem;
+  background: linear-gradient(180deg, var(--surface-1), var(--card-color));
+  box-shadow: var(--soft-shadow);
+}
+
+.metric-card .label {
+  font-size: 0.95rem;
+  color: var(--muted-color);
+  margin-bottom: 0.35rem;
+}
+
+.metric-card .value {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-color);
+}
+
+.metric-card .meta {
+  margin-top: 0.15rem;
+  color: var(--muted-color);
+  font-size: 0.9rem;
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.chart-card {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.75rem;
+  background: var(--card-color);
+  box-shadow: var(--soft-shadow);
 }
 
 .actions,
